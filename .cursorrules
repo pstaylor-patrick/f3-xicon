@@ -1,0 +1,22 @@
+ignore: node_modules, .next, .turbo, dist, build, .env, .DS_Store
+preferred_language: typescript
+preferred_framework: nextjs
+formatting: prettier
+linting: eslint
+reference_docs: ./docs/prd.md, ./README.md
+
+ai_guidelines: always use functional components, prefer hooks over classes, use type-safe code, follow PRD requirements, use the latest version of the libraries and frameworks (e.g., react 19 / next 15 server actions and server components)
+
+security: never commit secrets, API keys, or credentials
+
+performance: always optimize for performance, use the latest version of the libraries and frameworks
+
+accessibility: always follow accessibility guidelines, use the latest version of the libraries and frameworks
+
+best_practices: always follow best practices, use the latest version of the libraries and frameworks
+
+documentation: always follow documentation guidelines, use the latest version of the libraries and frameworks
+
+when writing test coverage, I prefer to have the files alongside the code rather than in a separate tests directory. For example:
+- `/Button.tsx`
+- `/Button.test.tsx`
