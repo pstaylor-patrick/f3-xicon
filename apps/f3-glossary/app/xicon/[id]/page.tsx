@@ -15,8 +15,9 @@ interface XiconDetailPageProps {
   };
 }
 
-export default function XiconDetailPage({ params, searchParams }: XiconDetailPageProps) {
-  const { id } = params;
+export default async function XiconDetailPage({ params, searchParams }: XiconDetailPageProps) {
+  // Await params to ensure they're available
+  const { id } = await Promise.resolve(params);
   const entry = getXiconById(id);
 
   if (!entry) {
@@ -26,15 +27,18 @@ export default function XiconDetailPage({ params, searchParams }: XiconDetailPag
   // Get related entries based on type
   const related = getRelatedXicons(entry);
 
+  // Await searchParams to ensure they're available
+  const resolvedSearchParams = await Promise.resolve(searchParams);
+
   // Get next and previous entries
   const filter: XiconFilter = {
-    kind: typeof searchParams.kind === 'string' ? (searchParams.kind as any) : undefined,
-    tags: typeof searchParams.tags === 'string' ? searchParams.tags.split(',').filter(Boolean) : [],
-    query: typeof searchParams.q === 'string' ? searchParams.q : '',
+    kind: typeof resolvedSearchParams.kind === 'string' ? (resolvedSearchParams.kind as any) : undefined,
+    tags: typeof resolvedSearchParams.tags === 'string' ? resolvedSearchParams.tags.split(',').filter(Boolean) : [],
+    query: typeof resolvedSearchParams.q === 'string' ? resolvedSearchParams.q : '',
     tagsOperator:
-      typeof searchParams.tagsOperator === 'string' ? (searchParams.tagsOperator as any) : 'OR',
-    city: typeof searchParams.city === 'string' ? searchParams.city : undefined,
-    state: typeof searchParams.state === 'string' ? searchParams.state : undefined,
+      typeof resolvedSearchParams.tagsOperator === 'string' ? (resolvedSearchParams.tagsOperator as any) : 'OR',
+    city: typeof resolvedSearchParams.city === 'string' ? resolvedSearchParams.city : undefined,
+    state: typeof resolvedSearchParams.state === 'string' ? resolvedSearchParams.state : undefined,
   };
 
   const { next, prev } = getNextPrevXicons(id, filter);
