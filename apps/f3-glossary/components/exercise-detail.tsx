@@ -1,27 +1,27 @@
-"use client"
+'use client';
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { ChevronLeft, ChevronRight, Play } from "lucide-react"
-import type { XiconEntry } from "@/lib/xicon"
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import type { XiconEntry } from '@/lib/xicon';
 
 interface ExerciseDetailProps {
-  entry: XiconEntry
-  related: XiconEntry[]
-  next?: XiconEntry
-  prev?: XiconEntry
+  entry: XiconEntry;
+  related: XiconEntry[];
+  next?: XiconEntry;
+  prev?: XiconEntry;
 }
 
 export function ExerciseDetail({ entry, related, next, prev }: ExerciseDetailProps) {
-  const { title, text, tags, youtubeId } = entry
+  const { title, text, tags, youtubeId } = entry;
 
   // Format text with basic markdown support
   const formatText = (text: string) => {
     // Replace newlines with <br>
-    const withLineBreaks = text.replace(/\n/g, "<br>")
-    return <div dangerouslySetInnerHTML={{ __html: withLineBreaks }} />
-  }
+    const withLineBreaks = text.replace(/\n/g, '<br>');
+    return <div dangerouslySetInnerHTML={{ __html: withLineBreaks }} />;
+  };
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -36,7 +36,7 @@ export function ExerciseDetail({ entry, related, next, prev }: ExerciseDetailPro
           <div className="mb-4 flex flex-wrap items-center gap-2">
             <Badge className="bg-blue-100 text-blue-800">Exercise</Badge>
             {tags &&
-              tags.filter(Boolean).map((tag) => (
+              tags.filter(Boolean).map(tag => (
                 <Badge key={tag} variant="outline" className="capitalize">
                   {tag}
                 </Badge>
@@ -92,18 +92,20 @@ export function ExerciseDetail({ entry, related, next, prev }: ExerciseDetailPro
           <div className="space-y-4">
             {related.length > 0 ? (
               related
-                .filter((item) => item.type === "exercise")
-                .map((item) => (
+                .filter(item => item.type === 'exercise')
+                .map(item => (
                   <Link key={item.id} href={`/xicon/${item.id}`}>
                     <div className="rounded-lg border p-4 transition-colors hover:bg-gray-50">
                       <div className="flex items-center justify-between">
                         <h3 className="font-medium">{item.title}</h3>
                         {item.youtubeId && <Play className="h-4 w-4 text-gray-400" />}
                       </div>
-                      <p className="mt-1 text-sm text-gray-600 line-clamp-2">{item.text.substring(0, 100)}</p>
+                      <p className="mt-1 text-sm text-gray-600 line-clamp-2">
+                        {item.text.substring(0, 100)}
+                      </p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {item.tags &&
-                          item.tags.slice(0, 3).map((tag) => (
+                          item.tags.slice(0, 3).map(tag => (
                             <Badge key={tag} variant="outline" className="text-xs capitalize">
                               {tag}
                             </Badge>
@@ -119,5 +121,5 @@ export function ExerciseDetail({ entry, related, next, prev }: ExerciseDetailPro
         </div>
       </div>
     </div>
-  )
+  );
 }

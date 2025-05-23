@@ -1,35 +1,35 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { SearchBar } from "@/components/search-bar"
-import { TagFilter } from "@/components/tag-filter"
-import { RegionFilter } from "@/components/region-filter"
+import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { SearchBar } from '@/components/search-bar';
+import { TagFilter } from '@/components/tag-filter';
+import { RegionFilter } from '@/components/region-filter';
 
 export function XiconHeader() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [activeTab, setActiveTab] = useState<"all" | "exercise" | "term" | "article" | "region">(
-    (searchParams.get("kind") as any) || "all",
-  )
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [activeTab, setActiveTab] = useState<'all' | 'exercise' | 'term' | 'article' | 'region'>(
+    (searchParams.get('kind') as any) || 'all'
+  );
 
   // Update URL when tab changes
   const handleTabChange = (value: string) => {
-    const newTab = value as "all" | "exercise" | "term" | "article" | "region"
-    setActiveTab(newTab)
+    const newTab = value as 'all' | 'exercise' | 'term' | 'article' | 'region';
+    setActiveTab(newTab);
 
     // Update URL
-    const params = new URLSearchParams(searchParams.toString())
+    const params = new URLSearchParams(searchParams.toString());
 
-    if (newTab === "all") {
-      params.delete("kind")
+    if (newTab === 'all') {
+      params.delete('kind');
     } else {
-      params.set("kind", newTab)
+      params.set('kind', newTab);
     }
 
-    router.push(`/xicon?${params.toString()}`)
-  }
+    router.push(`/xicon?${params.toString()}`);
+  };
 
   return (
     <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-md pb-4">
@@ -48,9 +48,9 @@ export function XiconHeader() {
           </TabsList>
         </Tabs>
 
-        {activeTab === "exercise" && <TagFilter />}
-        {activeTab === "region" && <RegionFilter />}
+        {activeTab === 'exercise' && <TagFilter />}
+        {activeTab === 'region' && <RegionFilter />}
       </div>
     </div>
-  )
+  );
 }

@@ -1,35 +1,35 @@
-"use client"
+'use client';
 
-import type React from "react"
+import type React from 'react';
 
-import { useState, useEffect, useRef } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { Input } from "@/components/ui/input"
-import { Search, X } from "lucide-react"
-import { useDebounce } from "@/hooks/use-debounce"
-import { getFilteredXicons } from "@/lib/xicon"
-import type { XiconEntry } from "@/lib/xicon"
+import { useState, useEffect, useRef } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Input } from '@/components/ui/input';
+import { Search, X } from 'lucide-react';
+import { useDebounce } from '@/hooks/use-debounce';
+import { getFilteredXicons } from '@/lib/xicon';
+import type { XiconEntry } from '@/lib/xicon';
 
 export function SearchBar() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [query, setQuery] = useState(searchParams.get("q") || "")
-  const [suggestions, setSuggestions] = useState<XiconEntry[]>([])
-  const [showSuggestions, setShowSuggestions] = useState(false)
-  const debouncedQuery = useDebounce(query, 300)
-  const inputRef = useRef<HTMLInputElement>(null)
-  const suggestionsRef = useRef<HTMLDivElement>(null)
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get('q') || '');
+  const [suggestions, setSuggestions] = useState<XiconEntry[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const debouncedQuery = useDebounce(query, 300);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const suggestionsRef = useRef<HTMLDivElement>(null);
 
   // Update suggestions when query changes
   useEffect(() => {
     if (debouncedQuery.length < 2) {
-      setSuggestions([])
-      return
+      setSuggestions([]);
+      return;
     }
 
-    const results = getFilteredXicons({ query: debouncedQuery })
-    setSuggestions(results.slice(0, 5))
-  }, [debouncedQuery])
+    const results = getFilteredXicons({ query: debouncedQuery });
+    setSuggestions(results.slice(0, 5));
+  }, [debouncedQuery]);
 
   // Handle click outside to close suggestions
   useEffect(() => {
@@ -40,50 +40,50 @@ export function SearchBar() {
         inputRef.current &&
         !inputRef.current.contains(event.target as Node)
       ) {
-        setShowSuggestions(false)
+        setShowSuggestions(false);
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside)
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Update URL when query changes
   const handleSearch = () => {
-    const params = new URLSearchParams(searchParams.toString())
+    const params = new URLSearchParams(searchParams.toString());
 
     if (query) {
-      params.set("q", query)
+      params.set('q', query);
     } else {
-      params.delete("q")
+      params.delete('q');
     }
 
-    router.push(`/xicon?${params.toString()}`)
-    setShowSuggestions(false)
-  }
+    router.push(`/xicon?${params.toString()}`);
+    setShowSuggestions(false);
+  };
 
   // Handle suggestion click
   const handleSuggestionClick = (id: string) => {
-    router.push(`/xicon/${id}`)
-    setShowSuggestions(false)
-  }
+    router.push(`/xicon/${id}`);
+    setShowSuggestions(false);
+  };
 
   // Handle key press
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSearch()
+    if (e.key === 'Enter') {
+      handleSearch();
     }
-  }
+  };
 
   // Clear search
   const clearSearch = () => {
-    setQuery("")
-    const params = new URLSearchParams(searchParams.toString())
-    params.delete("q")
-    router.push(`/xicon?${params.toString()}`)
-  }
+    setQuery('');
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('q');
+    router.push(`/xicon?${params.toString()}`);
+  };
 
   return (
     <div className="relative w-full">
@@ -95,9 +95,9 @@ export function SearchBar() {
           placeholder="Search exercises, terms, and articles..."
           className="pl-9 pr-9 h-12 w-full rounded-xl border-gray-300 focus:border-primary focus:ring-primary"
           value={query}
-          onChange={(e) => {
-            setQuery(e.target.value)
-            setShowSuggestions(true)
+          onChange={e => {
+            setQuery(e.target.value);
+            setShowSuggestions(true);
           }}
           onFocus={() => setShowSuggestions(true)}
           onKeyPress={handleKeyPress}
@@ -113,24 +113,29 @@ export function SearchBar() {
       </div>
 
       {showSuggestions && suggestions.length > 0 && (
-        <div ref={suggestionsRef} className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg">
+        <div
+          ref={suggestionsRef}
+          className="absolute z-10 mt-1 w-full rounded-md bg-white shadow-lg"
+        >
           <ul className="max-h-60 overflow-auto rounded-md py-1 text-base">
-            {suggestions.map((suggestion) => (
+            {suggestions.map(suggestion => (
               <li
                 key={suggestion.id}
                 onClick={() => handleSuggestionClick(suggestion.id)}
                 className="cursor-pointer px-4 py-2 hover:bg-gray-100"
               >
                 <div className="font-medium">{suggestion.title}</div>
-                <div className="text-sm text-gray-500 truncate">{suggestion.text.substring(0, 60)}...</div>
+                <div className="text-sm text-gray-500 truncate">
+                  {suggestion.text.substring(0, 60)}...
+                </div>
                 <div className="mt-1 flex items-center gap-2">
                   <span
                     className={`text-xs px-2 py-0.5 rounded-full ${
-                      suggestion.type === "exercise"
-                        ? "bg-blue-100 text-blue-800"
-                        : suggestion.type === "term"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-purple-100 text-purple-800"
+                      suggestion.type === 'exercise'
+                        ? 'bg-blue-100 text-blue-800'
+                        : suggestion.type === 'term'
+                          ? 'bg-green-100 text-green-800'
+                          : 'bg-purple-100 text-purple-800'
                     }`}
                   >
                     {suggestion.type}
@@ -142,5 +147,5 @@ export function SearchBar() {
         </div>
       )}
     </div>
-  )
+  );
 }

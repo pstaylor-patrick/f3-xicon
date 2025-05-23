@@ -1,76 +1,82 @@
-"use client"
+'use client';
 
-import { useState, useEffect } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Label } from "@/components/ui/label"
-import { Filter, X } from "lucide-react"
-import { getAllStates, getAllCities } from "@/lib/xicon"
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Label } from '@/components/ui/label';
+import { Filter, X } from 'lucide-react';
+import { getAllStates, getAllCities } from '@/lib/xicon';
 
 export function RegionFilter() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [states, setStates] = useState<string[]>([])
-  const [cities, setCities] = useState<string[]>([])
-  const [selectedState, setSelectedState] = useState<string>(searchParams.get("state") || "all")
-  const [selectedCity, setSelectedCity] = useState<string>(searchParams.get("city") || "all")
-  const [open, setOpen] = useState(false)
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [states, setStates] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
+  const [selectedState, setSelectedState] = useState<string>(searchParams.get('state') || 'all');
+  const [selectedCity, setSelectedCity] = useState<string>(searchParams.get('city') || 'all');
+  const [open, setOpen] = useState(false);
 
   // Load all states and cities
   useEffect(() => {
-    setStates(getAllStates())
-    setCities(getAllCities())
-  }, [])
+    setStates(getAllStates());
+    setCities(getAllCities());
+  }, []);
 
   // Update URL when filters change
   const updateFilters = () => {
-    const params = new URLSearchParams(searchParams.toString())
+    const params = new URLSearchParams(searchParams.toString());
 
-    if (selectedState !== "all") {
-      params.set("state", selectedState)
+    if (selectedState !== 'all') {
+      params.set('state', selectedState);
     } else {
-      params.delete("state")
+      params.delete('state');
     }
 
-    if (selectedCity !== "all") {
-      params.set("city", selectedCity)
+    if (selectedCity !== 'all') {
+      params.set('city', selectedCity);
     } else {
-      params.delete("city")
+      params.delete('city');
     }
 
-    router.push(`/xicon?${params.toString()}`)
-    setOpen(false)
-  }
+    router.push(`/xicon?${params.toString()}`);
+    setOpen(false);
+  };
 
   // Clear all filters
   const clearFilters = () => {
-    setSelectedState("all")
-    setSelectedCity("all")
+    setSelectedState('all');
+    setSelectedCity('all');
 
-    const params = new URLSearchParams(searchParams.toString())
-    params.delete("state")
-    params.delete("city")
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete('state');
+    params.delete('city');
 
-    router.push(`/xicon?${params.toString()}`)
-    setOpen(false)
-  }
+    router.push(`/xicon?${params.toString()}`);
+    setOpen(false);
+  };
 
-  const hasFilters = selectedState !== "all" || selectedCity !== "all"
+  const hasFilters = selectedState !== 'all' || selectedCity !== 'all';
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className={`flex items-center gap-2 ${hasFilters ? "border-primary text-primary" : ""}`}
+          className={`flex items-center gap-2 ${hasFilters ? 'border-primary text-primary' : ''}`}
         >
           <Filter className="h-4 w-4" />
           <span>Filter</span>
           {hasFilters && (
             <span className="ml-1 rounded-full bg-primary px-2 py-0.5 text-xs text-white">
-              {(selectedState !== "all" ? 1 : 0) + (selectedCity !== "all" ? 1 : 0)}
+              {(selectedState !== 'all' ? 1 : 0) + (selectedCity !== 'all' ? 1 : 0)}
             </span>
           )}
         </Button>
@@ -95,7 +101,7 @@ export function RegionFilter() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All States</SelectItem>
-                {states.map((state) => (
+                {states.map(state => (
                   <SelectItem key={state} value={state}>
                     {state}
                   </SelectItem>
@@ -112,7 +118,7 @@ export function RegionFilter() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Cities</SelectItem>
-                {cities.map((city) => (
+                {cities.map(city => (
                   <SelectItem key={city} value={city}>
                     {city}
                   </SelectItem>
@@ -127,5 +133,5 @@ export function RegionFilter() {
         </Button>
       </PopoverContent>
     </Popover>
-  )
+  );
 }

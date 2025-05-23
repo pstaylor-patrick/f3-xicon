@@ -1,23 +1,23 @@
-import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Play, MapPin } from "lucide-react"
-import type { XiconEntry } from "@/lib/xicon"
+import Link from 'next/link';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Play, MapPin } from 'lucide-react';
+import type { XiconEntry } from '@/lib/xicon';
 
 interface XiconCardProps {
-  entry: XiconEntry
+  entry: XiconEntry;
 }
 
 export function XiconCard({ entry }: XiconCardProps) {
-  const { id, title, text, tags, type, city, state } = entry
+  const { id, title, text, tags, type, city, state } = entry;
 
   // Determine badge color based on type
   const badgeColor = {
-    exercise: "bg-blue-100 text-blue-800 hover:bg-blue-200",
-    term: "bg-green-100 text-green-800 hover:bg-green-200",
-    article: "bg-purple-100 text-purple-800 hover:bg-purple-200",
-    region: "bg-yellow-100 text-yellow-800 hover:bg-yellow-200",
-  }[type]
+    exercise: 'bg-blue-100 text-blue-800 hover:bg-blue-200',
+    term: 'bg-green-100 text-green-800 hover:bg-green-200',
+    article: 'bg-purple-100 text-purple-800 hover:bg-purple-200',
+    region: 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200',
+  }[type];
 
   return (
     <Link href={`/xicon/${id}`}>
@@ -25,14 +25,16 @@ export function XiconCard({ entry }: XiconCardProps) {
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
             <h3 className="font-medium line-clamp-1">{title}</h3>
-            {type === "exercise" && tags?.includes("video") && <Play className="h-4 w-4 text-gray-400" />}
-            {type === "region" && <MapPin className="h-4 w-4 text-f3-red" />}
+            {type === 'exercise' && tags?.includes('video') && (
+              <Play className="h-4 w-4 text-gray-400" />
+            )}
+            {type === 'region' && <MapPin className="h-4 w-4 text-f3-red" />}
           </div>
 
           <div className="mt-2">
-            {type === "region" ? (
+            {type === 'region' ? (
               <p className="text-sm text-gray-600">
-                {city ? city + ", " : ""}
+                {city ? city + ', ' : ''}
                 {state}
               </p>
             ) : (
@@ -45,24 +47,24 @@ export function XiconCard({ entry }: XiconCardProps) {
               {type}
             </Badge>
 
-            {type === "exercise" &&
+            {type === 'exercise' &&
               tags &&
               tags
-                .filter((tag) => tag)
+                .filter(tag => tag)
                 .slice(0, 3)
-                .map((tag) => (
+                .map(tag => (
                   <Badge key={tag} variant="outline" className="text-xs capitalize">
                     {tag}
                   </Badge>
                 ))}
 
-            {type === "article" && entry.quadrant && (
+            {type === 'article' && entry.quadrant && (
               <Badge variant="outline" className="text-xs">
                 {entry.quadrant}
               </Badge>
             )}
 
-            {type === "region" && state && (
+            {type === 'region' && state && (
               <Badge variant="outline" className="text-xs">
                 {state}
               </Badge>
@@ -71,5 +73,5 @@ export function XiconCard({ entry }: XiconCardProps) {
         </CardContent>
       </Card>
     </Link>
-  )
+  );
 }

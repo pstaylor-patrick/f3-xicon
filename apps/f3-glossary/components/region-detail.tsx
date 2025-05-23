@@ -1,28 +1,28 @@
-"use client"
+'use client';
 
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { ChevronLeft, ChevronRight, MapPin } from "lucide-react"
-import type { XiconEntry } from "@/lib/xicon"
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
+import type { XiconEntry } from '@/lib/xicon';
 
 interface RegionDetailProps {
-  entry: XiconEntry
-  related: XiconEntry[]
-  next?: XiconEntry
-  prev?: XiconEntry
+  entry: XiconEntry;
+  related: XiconEntry[];
+  next?: XiconEntry;
+  prev?: XiconEntry;
 }
 
 export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) {
-  const { title, city, state, slug } = entry
+  const { title, city, state, slug } = entry;
 
   // Generate Google Maps URL
   const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    `${title} F3 ${city} ${state}`,
-  )}`
+    `${title} F3 ${city} ${state}`
+  )}`;
 
   // Generate F3 Nation region URL
-  const f3RegionUrl = `https://f3nation.com/regions/${slug}`
+  const f3RegionUrl = `https://f3nation.com/regions/${slug}`;
 
   return (
     <div className="container mx-auto px-4 py-6">
@@ -44,7 +44,7 @@ export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) 
             <div className="flex items-center gap-2">
               <MapPin className="h-5 w-5 text-f3-red" />
               <span className="text-lg">
-                {city ? city + ", " : ""}
+                {city ? city + ', ' : ''}
                 {state}
               </span>
             </div>
@@ -93,13 +93,13 @@ export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) 
           <div className="space-y-4">
             {related.length > 0 ? (
               related
-                .filter((item) => item.type === "region")
-                .map((item) => (
+                .filter(item => item.type === 'region')
+                .map(item => (
                   <Link key={item.id} href={`/xicon/${item.id}`}>
                     <div className="rounded-lg border p-4 transition-colors hover:bg-gray-50">
                       <h3 className="font-medium">{item.title}</h3>
                       <p className="mt-1 text-sm text-gray-600">
-                        {item.city ? item.city + ", " : ""}
+                        {item.city ? item.city + ', ' : ''}
                         {item.state}
                       </p>
                     </div>
@@ -112,5 +112,5 @@ export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) 
         </div>
       </div>
     </div>
-  )
+  );
 }
