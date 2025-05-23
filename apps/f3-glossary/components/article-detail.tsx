@@ -73,7 +73,9 @@ export function ArticleDetail({ entry, related, next, prev }: ArticleDetailProps
           {articleUrl && (
             <div className="mt-6">
               <Link href={articleUrl} target="_blank" rel="noopener noreferrer">
-                <Button className="bg-f3-red hover:bg-f3-red/90">Read full article</Button>
+                <Button className="bg-f3-red hover:bg-f3-red/90 text-white">
+                  Read full article
+                </Button>
               </Link>
             </div>
           )}
