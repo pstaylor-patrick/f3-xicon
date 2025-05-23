@@ -9,6 +9,12 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-}
+  experimental: {
+    serverActions: {
+      allowedOrigins: ['localhost:3000'],
+    },
+  },
+  serverExternalPackages: [],
+};
 
-export default nextConfig
+export default nextConfig;
