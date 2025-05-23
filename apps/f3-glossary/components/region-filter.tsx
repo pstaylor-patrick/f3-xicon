@@ -81,7 +81,7 @@ export function RegionFilter() {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80">
+      <PopoverContent className="w-80 popover-transparent">
         <div className="flex items-center justify-between">
           <h3 className="font-medium">Filter by Location</h3>
           {hasFilters && (
@@ -99,7 +99,7 @@ export function RegionFilter() {
               <SelectTrigger id="state-filter">
                 <SelectValue placeholder="Select a state" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="popover-transparent">
                 <SelectItem value="all">All States</SelectItem>
                 {states.map(state => (
                   <SelectItem key={state} value={state}>
@@ -116,7 +116,7 @@ export function RegionFilter() {
               <SelectTrigger id="city-filter">
                 <SelectValue placeholder="Select a city" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="popover-transparent">
                 <SelectItem value="all">All Cities</SelectItem>
                 {cities.map(city => (
                   <SelectItem key={city} value={city}>

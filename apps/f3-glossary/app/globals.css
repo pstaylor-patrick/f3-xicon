@@ -57,3 +57,14 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .popover-transparent {
+    --popover: 0 0% 100% / 0.97;
+    background-color: hsl(var(--popover)) !important;
+  }
+  .dark .popover-transparent {
+    --popover: 0 0% 3.9% / 0.97;
+    background-color: hsl(var(--popover)) !important;
+  }
+}

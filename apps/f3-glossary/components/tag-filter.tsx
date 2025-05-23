@@ -79,7 +79,7 @@ export function TagFilter() {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80">
+      <PopoverContent className="w-80 popover-transparent">
         <div className="flex items-center justify-between">
           <h3 className="font-medium">Filter by Tags</h3>
           {selectedTags.length > 0 && (
