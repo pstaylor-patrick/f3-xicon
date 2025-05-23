@@ -4,20 +4,19 @@ import { Badge } from '@/components/ui/badge';
 import { Play, MapPin } from 'lucide-react';
 import type { XiconEntry } from '@/lib/xicon';
 
+export const badgeColor = {
+  exercise: 'bg-blue-100 text-blue-800 hover:bg-blue-200',
+  term: 'bg-green-100 text-green-800 hover:bg-green-200',
+  article: 'bg-purple-100 text-purple-800 hover:bg-purple-200',
+  region: 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200',
+};
+
 interface XiconCardProps {
   entry: XiconEntry;
 }
 
 export function XiconCard({ entry }: XiconCardProps) {
   const { id, title, text, tags, type, city, state } = entry;
-
-  // Determine badge color based on type
-  const badgeColor = {
-    exercise: 'bg-blue-100 text-blue-800 hover:bg-blue-200',
-    term: 'bg-green-100 text-green-800 hover:bg-green-200',
-    article: 'bg-purple-100 text-purple-800 hover:bg-purple-200',
-    region: 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200',
-  }[type];
 
   return (
     <Link href={`/xicon/${id}`}>
@@ -43,7 +42,7 @@ export function XiconCard({ entry }: XiconCardProps) {
           </div>
 
           <div className="mt-3 flex flex-wrap items-center gap-2">
-            <Badge variant="secondary" className={badgeColor}>
+            <Badge variant="secondary" className={badgeColor[type]}>
               {type}
             </Badge>
 
