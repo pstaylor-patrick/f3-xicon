@@ -36,6 +36,7 @@ export function XiconList() {
 
     // Get filtered results
     const results = getFilteredXicons(filter);
+    results.sort((a, b) => a.title.localeCompare(b.title));
     setAllResults(results);
     setDisplayedResults(results.slice(0, ITEMS_PER_PAGE));
     setHasMore(results.length > ITEMS_PER_PAGE);
