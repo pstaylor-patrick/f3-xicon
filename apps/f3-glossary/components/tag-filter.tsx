@@ -114,7 +114,7 @@ export function TagFilter() {
           </div>
         </div>
 
-        <Button className="mt-4 w-full" onClick={updateFilters}>
+        <Button variant="default" className="mt-4 w-full text-white" onClick={updateFilters}>
           Apply Filters
         </Button>
       </PopoverContent>
