@@ -38,16 +38,17 @@ export function XiconHeader() {
       </div>
 
       <div className="flex items-center justify-between">
-        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-auto">
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="exercise">Exercises</TabsTrigger>
-            <TabsTrigger value="term">Glossary</TabsTrigger>
-            <TabsTrigger value="article">Articles</TabsTrigger>
-            <TabsTrigger value="region">Regions</TabsTrigger>
-          </TabsList>
-        </Tabs>
-
+        <div className="flex-1 min-w-0 overflow-x-auto scrollbar-hide sm:overflow-visible">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-auto">
+            <TabsList className="flex-nowrap min-w-fit">
+              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="exercise">Exercises</TabsTrigger>
+              <TabsTrigger value="term">Glossary</TabsTrigger>
+              <TabsTrigger value="article">Articles</TabsTrigger>
+              <TabsTrigger value="region">Regions</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
         {activeTab === 'exercise' && <TagFilter />}
         {activeTab === 'region' && <RegionFilter />}
       </div>
