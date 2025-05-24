@@ -27,8 +27,10 @@ export function SearchBar() {
       return;
     }
 
-    const results = getFilteredXicons({ query: debouncedQuery });
-    setSuggestions(results.slice(0, 5));
+    (async () => {
+      const results = await getFilteredXicons({ query: debouncedQuery });
+      setSuggestions(results.slice(0, 5));
+    })();
   }, [debouncedQuery]);
 
   // Handle click outside to close suggestions

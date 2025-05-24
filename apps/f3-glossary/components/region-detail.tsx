@@ -7,6 +7,9 @@ import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import { RelatedItems } from '@/components/related-items';
 import type { XiconEntry } from '@/lib/xicon';
 
+const DEFAULT_WEBSITE_URL = 'https://freemensworkout.org/regions';
+const DEFAULT_MAP_URL = 'https://map.f3nation.com/';
+
 interface RegionDetailProps {
   entry: XiconEntry;
   related: XiconEntry[];
@@ -15,15 +18,7 @@ interface RegionDetailProps {
 }
 
 export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) {
-  const { title, city, state, slug } = entry;
-
-  // Generate Google Maps URL
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    `${title} F3 ${city} ${state}`
-  )}`;
-
-  // Generate F3 Nation region URL
-  const f3RegionUrl = `https://f3nation.com/regions/${slug}`;
+  const { title, city, state, slug, websiteUrl, mapUrl } = entry;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -36,7 +31,9 @@ export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="mb-6">
-            <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100">Region</Badge>
+            <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100">
+              Region
+            </Badge>
           </div>
 
           <h1 className="mb-8 text-4xl font-bold tracking-tight">{title}</h1>
@@ -52,11 +49,19 @@ export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) 
           </div>
 
           <div className="mt-6 flex flex-wrap gap-4">
-            <Link href={f3RegionUrl} target="_blank" rel="noopener noreferrer">
+            <Link
+              href={websiteUrl ? websiteUrl : DEFAULT_WEBSITE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Button className="bg-f3-red text-white hover:bg-f3-red/90">Visit Region Page</Button>
             </Link>
 
-            <Link href={mapsUrl} target="_blank" rel="noopener noreferrer">
+            <Link
+              href={mapUrl ? mapUrl : DEFAULT_MAP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Button variant="outline" className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
                 <span>View on Map</span>

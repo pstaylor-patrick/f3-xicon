@@ -26,8 +26,11 @@ export function RegionFilter() {
 
   // Load all states and cities
   useEffect(() => {
-    setStates(getAllStates());
-    setCities(getAllCities());
+    (async () => {
+      const [states, cities] = await Promise.all([getAllStates(), getAllCities()]);
+      setStates(states);
+      setCities(cities);
+    })();
   }, []);
 
   // Update URL when filters change

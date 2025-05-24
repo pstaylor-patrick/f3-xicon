@@ -27,6 +27,8 @@ export type Region = {
   name: string;
   city: string;
   state: string;
+  websiteUrl: string;
+  mapUrl: string;
 };
 
 export type XiconItem = {
@@ -43,4 +45,6 @@ export type XiconItem = {
   slug?: string;
   city?: string;
   state?: string;
+  websiteUrl?: string;
+  mapUrl?: string;
 };

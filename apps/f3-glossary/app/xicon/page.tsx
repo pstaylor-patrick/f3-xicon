@@ -47,10 +47,12 @@ export default function XiconPage() {
     setPage(1);
 
     // Get filtered results
-    const results = getFilteredXicons(newFilter);
-    setAllResults(results);
-    setDisplayedResults(results.slice(0, ITEMS_PER_PAGE));
-    setHasMore(results.length > ITEMS_PER_PAGE);
+    (async () => {
+      const results = await getFilteredXicons(newFilter);
+      setAllResults(results);
+      setDisplayedResults(results.slice(0, ITEMS_PER_PAGE));
+      setHasMore(results.length > ITEMS_PER_PAGE);
+    })();
   }, [searchParams, activeTab]);
 
   // Load more results when scrolling to the bottom
