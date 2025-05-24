@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import { RelatedItems } from '@/components/related-items';
 import type { XiconEntry } from '@/lib/xicon';
 
+const DEFAULT_WEBSITE_URL = 'https://freemensworkout.org/regions';
 const DEFAULT_MAP_URL = 'https://map.f3nation.com/';
 
 interface RegionDetailProps {
@@ -17,10 +18,7 @@ interface RegionDetailProps {
 }
 
 export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) {
-  const { title, city, state, slug, mapUrl } = entry;
-
-  // Generate F3 Nation region URL
-  const f3RegionUrl = `https://freemensworkout.org/regions/${slug}`;
+  const { title, city, state, slug, websiteUrl, mapUrl } = entry;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -51,7 +49,11 @@ export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) 
           </div>
 
           <div className="mt-6 flex flex-wrap gap-4">
-            <Link href={f3RegionUrl} target="_blank" rel="noopener noreferrer">
+            <Link
+              href={websiteUrl ? websiteUrl : DEFAULT_WEBSITE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Button className="bg-f3-red text-white hover:bg-f3-red/90">Visit Region Page</Button>
             </Link>
 

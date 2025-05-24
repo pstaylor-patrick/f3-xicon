@@ -41,15 +41,18 @@ export async function getRegions(): Promise<Region[]> {
   const regions: Region[] = [];
 
   for (let i = 0; i < regionNames.length; i++) {
-    const regionName = regionNames[i];
-    const { city, state } = getLocation(regionName, locationsByRegion);
-    const mapUrl = getMapUrl(regionName, latLngByRegion);
+    const name = regionNames[i];
+    const { city, state } = getLocation(name, locationsByRegion);
+    const mapUrl = getMapUrl(name, latLngByRegion);
+    const slug = toKebabCase(name);
+    const websiteUrl = `https://freemensworkout.org/regions/${slug}`;
 
     const region: Region = {
-      slug: toKebabCase(regionName),
-      name: regionName,
-      city: city,
-      state: state,
+      slug,
+      name,
+      city,
+      state,
+      websiteUrl,
       mapUrl,
     };
     regions.push(region);

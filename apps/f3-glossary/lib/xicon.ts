@@ -52,6 +52,7 @@ export async function getAllXicons(): Promise<XiconItem[]> {
     slug: item.slug,
     city: item.city,
     state: item.state,
+    websiteUrl: item.websiteUrl,
     mapUrl: item.mapUrl,
   }));
 
