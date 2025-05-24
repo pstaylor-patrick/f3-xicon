@@ -1,11 +1,15 @@
 'use server';
 
 import type { Region } from '@/types';
+import type { LatLng } from './mapUtils';
+import { getMapUrl } from './mapUtils';
 
 const GOOGLE_SHEETS_JSON_URL_POINTS =
   'https://sheets.googleapis.com/v4/spreadsheets/1lfbDLW4aj_BJgEzX6A0AoTWb33BYIskko5ggjffOrrg/values/Points?key=AIzaSyCUFLnGh5pHkqh3TjPsJD-8hOZwGlxvRwQ';
 const COL_NAME_REGION = 'Region';
 const COL_NAME_LOCATION = 'Location';
+const COL_NAME_LAT = 'Latitude';
+const COL_NAME_LNG = 'Longitude';
 
 export async function getRegions(): Promise<Region[]> {
   const res = await fetch(GOOGLE_SHEETS_JSON_URL_POINTS);
@@ -23,17 +27,30 @@ export async function getRegions(): Promise<Region[]> {
       acc[region].push(location);
       return acc;
     }, {});
+  const colNumLat = pointsRes.values[0].findIndex(colName => colName === COL_NAME_LAT);
+  const colNumLng = pointsRes.values[0].findIndex(colName => colName === COL_NAME_LNG);
+  const latLngByRegion = pointsRes.values.slice(1).reduce<Record<string, LatLng[]>>((acc, row) => {
+    const region = row[colNumRegion];
+    const lat = row[colNumLat];
+    const lng = row[colNumLng];
+    if (!region || !lat || !lng) return acc;
+    if (!acc[region]) acc[region] = [];
+    acc[region].push({ lat, lng });
+    return acc;
+  }, {});
   const regions: Region[] = [];
 
   for (let i = 0; i < regionNames.length; i++) {
     const regionName = regionNames[i];
     const { city, state } = getLocation(regionName, locationsByRegion);
+    const mapUrl = getMapUrl(regionName, latLngByRegion);
 
     const region: Region = {
       slug: toKebabCase(regionName),
       name: regionName,
       city: city,
       state: state,
+      mapUrl,
     };
     regions.push(region);
   }

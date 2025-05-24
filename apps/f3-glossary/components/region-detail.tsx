@@ -7,6 +7,8 @@ import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import { RelatedItems } from '@/components/related-items';
 import type { XiconEntry } from '@/lib/xicon';
 
+const DEFAULT_MAP_URL = 'https://map.f3nation.com/';
+
 interface RegionDetailProps {
   entry: XiconEntry;
   related: XiconEntry[];
@@ -15,21 +17,7 @@ interface RegionDetailProps {
 }
 
 export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) {
-  const { title, city, state, slug } = entry;
-
-  // Generate F3 Nation maps URL
-  /**
-   * TODO: extend server action
-   * to use haversian formula for this
-   * while fetching regions
-   * https://github.com/F3-Nation/f3-region-pages/blob/a5d57ba/src/utils/mapUtils.ts#L65
-   **/
-  const mapsData = {
-    lat: 30.548408,
-    lng: -96.275275,
-    zoom: 15,
-  };
-  const mapsUrl = `https://map.f3nation.com/?lat=${mapsData.lat}&lng=${mapsData.lng}&zoom=${mapsData.zoom}`;
+  const { title, city, state, slug, mapUrl } = entry;
 
   // Generate F3 Nation region URL
   const f3RegionUrl = `https://freemensworkout.org/regions/${slug}`;
@@ -67,7 +55,11 @@ export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) 
               <Button className="bg-f3-red text-white hover:bg-f3-red/90">Visit Region Page</Button>
             </Link>
 
-            <Link href={mapsUrl} target="_blank" rel="noopener noreferrer">
+            <Link
+              href={mapUrl ? mapUrl : DEFAULT_MAP_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Button variant="outline" className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" />
                 <span>View on Map</span>
