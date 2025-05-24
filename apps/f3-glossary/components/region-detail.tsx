@@ -17,13 +17,22 @@ interface RegionDetailProps {
 export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) {
   const { title, city, state, slug } = entry;
 
-  // Generate Google Maps URL
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    `${title} F3 ${city} ${state}`
-  )}`;
+  // Generate F3 Nation maps URL
+  /**
+   * TODO: extend server action
+   * to use haversian formula for this
+   * while fetching regions
+   * https://github.com/F3-Nation/f3-region-pages/blob/a5d57ba/src/utils/mapUtils.ts#L65
+   **/
+  const mapsData = {
+    lat: 30.548408,
+    lng: -96.275275,
+    zoom: 15,
+  };
+  const mapsUrl = `https://map.f3nation.com/?lat=${mapsData.lat}&lng=${mapsData.lng}&zoom=${mapsData.zoom}`;
 
   // Generate F3 Nation region URL
-  const f3RegionUrl = `https://f3nation.com/regions/${slug}`;
+  const f3RegionUrl = `https://freemensworkout.org/regions/${slug}`;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -36,7 +45,9 @@ export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="mb-6">
-            <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100">Region</Badge>
+            <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100">
+              Region
+            </Badge>
           </div>
 
           <h1 className="mb-8 text-4xl font-bold tracking-tight">{title}</h1>

@@ -1,4 +1,5 @@
-import { exicon, lexicon, qSourceArticles, regions } from './xicon-data';
+import { exicon, lexicon, qSourceArticles } from './xicon-data';
+import { getRegions } from '@/lib/regions';
 import type { XiconItem } from './types';
 
 export type XiconFilter = {
@@ -16,7 +17,7 @@ function generateId(title: string, type: string): string {
   return `${type}-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
 }
 
-export function getAllXicons(): XiconItem[] {
+export async function getAllXicons(): Promise<XiconItem[]> {
   const exercises: XiconItem[] = exicon.map(item => ({
     id: generateId(item.title, 'exercise'),
     title: item.title,
@@ -42,6 +43,7 @@ export function getAllXicons(): XiconItem[] {
     featuredImageUrl: item.featuredImageUrl,
   }));
 
+  const regions = await getRegions();
   const regionItems: XiconItem[] = regions.map(item => ({
     id: `region-${item.slug}`,
     title: item.name,
@@ -55,13 +57,13 @@ export function getAllXicons(): XiconItem[] {
   return [...exercises, ...terms, ...articles, ...regionItems];
 }
 
-export function getXiconById(id: string): XiconItem | undefined {
-  const allItems = getAllXicons();
+export async function getXiconById(id: string): Promise<XiconItem | undefined> {
+  const allItems = await getAllXicons();
   return allItems.find(item => item.id === id);
 }
 
-export function getFilteredXicons(filter: XiconFilter): XiconItem[] {
-  let items = getAllXicons();
+export async function getFilteredXicons(filter: XiconFilter): Promise<XiconItem[]> {
+  let items = await getAllXicons();
 
   // Filter by kind
   if (filter.kind) {
@@ -122,9 +124,9 @@ export function getFilteredXicons(filter: XiconFilter): XiconItem[] {
   return items;
 }
 
-export function getAllTags(): string[] {
+export async function getAllTags(): Promise<string[]> {
   const tagSet = new Set<string>();
-  const exercises = getAllXicons().filter(item => item.type === 'exercise');
+  const exercises = (await getAllXicons()).filter(item => item.type === 'exercise');
 
   exercises.forEach(item => {
     item.tags?.forEach(tag => {
@@ -135,9 +137,9 @@ export function getAllTags(): string[] {
   return Array.from(tagSet).sort();
 }
 
-export function getAllStates(): string[] {
+export async function getAllStates(): Promise<string[]> {
   const stateSet = new Set<string>();
-  const regionItems = getAllXicons().filter(item => item.type === 'region');
+  const regionItems = (await getAllXicons()).filter(item => item.type === 'region');
 
   regionItems.forEach(item => {
     if (item.state && item.state.trim() !== '') {
@@ -148,9 +150,9 @@ export function getAllStates(): string[] {
   return Array.from(stateSet).sort();
 }
 
-export function getAllCities(): string[] {
+export async function getAllCities(): Promise<string[]> {
   const citySet = new Set<string>();
-  const regionItems = getAllXicons().filter(item => item.type === 'region');
+  const regionItems = (await getAllXicons()).filter(item => item.type === 'region');
 
   regionItems.forEach(item => {
     if (item.city && item.city.trim() !== '') {
@@ -161,9 +163,8 @@ export function getAllCities(): string[] {
   return Array.from(citySet).sort();
 }
 
-// Update the getRelatedXicons function to better handle different entry types
-export function getRelatedXicons(entry: XiconItem, limit = 5): XiconItem[] {
-  const allItems = getAllXicons();
+export async function getRelatedXicons(entry: XiconItem, limit = 5): Promise<XiconItem[]> {
+  const allItems = await getAllXicons();
   let related: XiconItem[] = [];
 
   // First, find items of the same type
@@ -234,13 +235,12 @@ export function getRelatedXicons(entry: XiconItem, limit = 5): XiconItem[] {
   return related.slice(0, limit);
 }
 
-// Update the getNextPrevXicons function to respect current filter context
-export function getNextPrevXicons(
+export async function getNextPrevXicons(
   currentId: string,
   filter: XiconFilter
-): { next?: XiconItem; prev?: XiconItem } {
+): Promise<{ next?: XiconItem; prev?: XiconItem }> {
   // Get filtered items based on the current filter
-  const filteredItems = getFilteredXicons(filter);
+  const filteredItems = await getFilteredXicons(filter);
 
   // Find the index of the current item
   const currentIndex = filteredItems.findIndex(item => item.id === currentId);

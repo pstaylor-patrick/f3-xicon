@@ -22,7 +22,10 @@ export function TagFilter() {
 
   // Load all tags
   useEffect(() => {
-    setTags(getAllTags());
+    (async () => {
+      const tags = await getAllTags();
+      setTags(tags);
+    })();
   }, []);
 
   // Update URL when filters change

@@ -35,12 +35,14 @@ export function XiconList() {
     setLoading(true);
 
     // Get filtered results
-    const results = getFilteredXicons(filter);
-    results.sort((a, b) => a.title.localeCompare(b.title));
-    setAllResults(results);
-    setDisplayedResults(results.slice(0, ITEMS_PER_PAGE));
-    setHasMore(results.length > ITEMS_PER_PAGE);
-    setLoading(false);
+    (async () => {
+      const results = await getFilteredXicons(filter);
+      results.sort((a, b) => a.title.localeCompare(b.title));
+      setAllResults(results);
+      setDisplayedResults(results.slice(0, ITEMS_PER_PAGE));
+      setHasMore(results.length > ITEMS_PER_PAGE);
+      setLoading(false);
+    })();
   }, [searchParams]);
 
   // Load more results when scrolling to the bottom
