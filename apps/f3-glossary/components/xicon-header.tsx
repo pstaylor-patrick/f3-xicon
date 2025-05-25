@@ -6,6 +6,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SearchBar } from '@/components/search-bar';
 import { TagFilter } from '@/components/tag-filter';
 import { RegionFilter } from '@/components/region-filter';
+import { prepareParamsForTabSwitch } from '@/lib/prepare-tab-urls';
 
 export function XiconHeader() {
   const router = useRouter();
@@ -17,18 +18,17 @@ export function XiconHeader() {
   // Update URL when tab changes
   const handleTabChange = (value: string) => {
     const newTab = value as 'all' | 'exercise' | 'term' | 'article' | 'region';
+    const currentKind = searchParams.get('kind') || 'all';
+
     setActiveTab(newTab);
 
-    // Update URL
-    const params = new URLSearchParams(searchParams.toString());
+    const newParams = prepareParamsForTabSwitch({
+      currentTab: currentKind,
+      newTab,
+      searchParams,
+    });
 
-    if (newTab === 'all') {
-      params.delete('kind');
-    } else {
-      params.set('kind', newTab);
-    }
-
-    router.push(`/xicon?${params.toString()}`);
+    router.push(`/xicon?${newParams.toString()}`);
   };
 
   return (

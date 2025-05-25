@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Filter, X } from 'lucide-react';
 import { getAllTags } from '@/lib/xicon';
+import { set } from 'date-fns';
 
 export function TagFilter() {
   const router = useRouter();
@@ -26,7 +27,9 @@ export function TagFilter() {
       const tags = await getAllTags();
       setTags(tags);
     })();
-  }, []);
+    setSelectedTags(searchParams.get('tags')?.split(',').filter(Boolean) || []);
+    setIsAnd(searchParams.get('tagsOperator') === 'AND');
+  }, [searchParams]);
 
   // Update URL when filters change
   const updateFilters = () => {
