@@ -35,7 +35,9 @@ export function ExerciseDetail({ entry, related, next, prev }: ExerciseDetailPro
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="mb-6 flex flex-wrap items-center gap-2">
-            <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100">Exercise</Badge>
+            <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100">
+              Exercise
+            </Badge>
             {tags &&
               tags.filter(Boolean).map(tag => (
                 <Badge key={tag} variant="outline" className="capitalize">

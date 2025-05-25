@@ -35,10 +35,7 @@ export function RelatedItems({ items, title, className = '' }: RelatedItemsProps
                   {item.text.substring(0, 100)}
                 </p>
                 <div className="mt-3">
-                  <Badge
-                    variant="secondary"
-                    className={badgeColor[item.type]}
-                  >
+                  <Badge variant="secondary" className={badgeColor[item.type]}>
                     {item.type}
                   </Badge>
                 </div>
@@ -51,4 +48,4 @@ export function RelatedItems({ items, title, className = '' }: RelatedItemsProps
       </div>
     </div>
   );
-} 
+}
