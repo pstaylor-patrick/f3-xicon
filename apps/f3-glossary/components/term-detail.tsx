@@ -35,7 +35,9 @@ export function TermDetail({ entry, related, next, prev }: TermDetailProps) {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="mb-6">
-            <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">Glossary Term</Badge>
+            <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100">
+              Glossary Term
+            </Badge>
           </div>
 
           <h1 className="mb-8 text-4xl font-bold tracking-tight">{title}</h1>

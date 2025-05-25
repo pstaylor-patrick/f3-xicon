@@ -46,11 +46,13 @@ export function EntryLayout({ entry, related, next, prev }: EntryLayoutProps) {
           <div className="mb-6 flex flex-wrap items-center gap-2">
             <Badge className={badgeColor}>{type}</Badge>
             {type === 'exercise' &&
-              tags?.filter(tag => tag).map(tag => (
-                <Badge key={tag} variant="outline" className="capitalize">
-                  {tag}
-                </Badge>
-              ))}
+              tags
+                ?.filter(tag => tag)
+                .map(tag => (
+                  <Badge key={tag} variant="outline" className="capitalize">
+                    {tag}
+                  </Badge>
+                ))}
           </div>
 
           <h1 className="mb-8 text-4xl font-bold tracking-tight">{title}</h1>

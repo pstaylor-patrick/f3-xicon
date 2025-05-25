@@ -11,7 +11,10 @@ export default function Home() {
       </p>
 
       <Link href="/xicon">
-        <Button variant="default" className="bg-primary text-white hover:bg-primary/90 flex items-center gap-2">
+        <Button
+          variant="default"
+          className="bg-primary text-white hover:bg-primary/90 flex items-center gap-2"
+        >
           <Search className="h-4 w-4" />
           Start Searching
         </Button>
