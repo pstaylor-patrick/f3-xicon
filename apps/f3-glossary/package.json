@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack --port 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:start": "pnpm dlx supabase start",
+    "db:stop": "pnpm dlx supabase stop --project-id f3-glossary"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -65,6 +67,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "postcss": "^8",
+    "supabase": "^2.23.4",
     "tailwindcss": "^3.4.17"
   }
 }
