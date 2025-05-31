@@ -12,7 +12,7 @@ export async function seedRegions() {
   const regions = await fetchRegions();
   for (let i = 0; i < regions.length; i++) {
     const region = regions[i];
-    console.debug(`seeding region ${i + 1} of ${regions.length}: ${region.name}`);
+    console.debug(`seeding region ${i + 1} of ${regions.length}: ${region.slug}`);
     await db.insert(regionsSchema).values(region).onConflictDoNothing();
   }
   console.debug('done seeding regions');
@@ -47,6 +47,7 @@ async function fetchRegions(): Promise<Region[]> {
     };
     regions.push(region);
   }
+  regions.sort((a, b) => a.slug.localeCompare(b.slug));
   return regions;
 }
 
