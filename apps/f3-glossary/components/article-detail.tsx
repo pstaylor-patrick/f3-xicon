@@ -108,7 +108,6 @@ export function ArticleDetail({ entry, related, next, prev }: ArticleDetailProps
         </div>
 
         <div>
-          <h2 className="mb-4 text-xl font-semibold">Related Articles</h2>
           <div className="space-y-4">
             {related.length > 0 ? (
               <RelatedItems
