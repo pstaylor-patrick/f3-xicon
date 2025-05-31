@@ -11,7 +11,15 @@
     "db:stop": "pnpm dlx supabase stop --project-id f3-glossary",
     "db:generate:migration": "drizzle-kit generate --config drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config drizzle.config.ts",
-    "db:push": "drizzle-kit push --config drizzle.config.ts"
+    "db:push": "drizzle-kit push --config drizzle.config.ts",
+    "db:seed": "pnpm dlx bun scripts/db/seed.ts",
+    "db:seed:articles": "pnpm dlx bun scripts/db/articles/seed/seed.ts",
+    "db:seed:items": "pnpm dlx bun scripts/db/items/seed/seed.ts",
+    "db:seed:regions": "pnpm dlx bun scripts/db/regions/seed/seed.ts",
+    "db:reset": "pnpm dlx bun scripts/db/reset.ts",
+    "db:reset:articles": "pnpm dlx bun scripts/db/articles/reset/reset.ts",
+    "db:reset:items": "pnpm dlx bun scripts/db/items/reset/reset.ts",
+    "db:reset:regions": "pnpm dlx bun scripts/db/regions/reset/reset.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -73,6 +81,7 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "bun": "^1.2.15",
     "postcss": "^8",
     "supabase": "^2.23.4",
     "tailwindcss": "^3.4.17"
