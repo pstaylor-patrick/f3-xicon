@@ -8,8 +8,14 @@ const GOOGLE_SHEETS_JSON_URL_POINTS =
   'https://sheets.googleapis.com/v4/spreadsheets/1lfbDLW4aj_BJgEzX6A0AoTWb33BYIskko5ggjffOrrg/values/Points?key=AIzaSyCUFLnGh5pHkqh3TjPsJD-8hOZwGlxvRwQ';
 
 export async function seedRegions() {
+  console.debug('seeding regions');
   const regions = await fetchRegions();
-  await db.insert(regionsSchema).values(regions).onConflictDoNothing();
+  for (let i = 0; i < regions.length; i++) {
+    const region = regions[i];
+    console.debug(`seeding region ${i + 1} of ${regions.length}: ${region.name}`);
+    await db.insert(regionsSchema).values(region).onConflictDoNothing();
+  }
+  console.debug('done seeding regions');
 }
 
 async function fetchRegions(): Promise<Region[]> {
