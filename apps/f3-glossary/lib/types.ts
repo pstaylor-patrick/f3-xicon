@@ -22,15 +22,6 @@ export type QSourceArticle = {
   fullText: string;
 };
 
-export type Region = {
-  slug: string;
-  name: string;
-  city: string;
-  state: string;
-  websiteUrl: string;
-  mapUrl: string;
-};
-
 export type XiconItem = {
   id: string;
   title: string;
@@ -45,6 +36,7 @@ export type XiconItem = {
   slug?: string;
   city?: string;
   state?: string;
+  country?: string;
   websiteUrl?: string;
   mapUrl?: string;
 };

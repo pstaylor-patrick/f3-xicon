@@ -13,23 +13,32 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Filter, X } from 'lucide-react';
-import { getAllStates, getAllCities } from '@/lib/xicon';
+import { getAllStates, getAllCities, getAllCountries } from '@/lib/xicon';
 
 export function RegionFilter() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
+  const [countries, setCountries] = useState<string[]>([]);
   const [selectedState, setSelectedState] = useState<string>(searchParams.get('state') || 'all');
   const [selectedCity, setSelectedCity] = useState<string>(searchParams.get('city') || 'all');
+  const [selectedCountry, setSelectedCountry] = useState<string>(
+    searchParams.get('country') || 'all'
+  );
   const [open, setOpen] = useState(false);
 
   // Load all states and cities
   useEffect(() => {
     (async () => {
-      const [states, cities] = await Promise.all([getAllStates(), getAllCities()]);
+      const [states, cities, countries] = await Promise.all([
+        getAllStates(),
+        getAllCities(),
+        getAllCountries(),
+      ]);
       setStates(states);
       setCities(cities);
+      setCountries(countries);
     })();
   }, []);
 
@@ -49,6 +58,12 @@ export function RegionFilter() {
       params.delete('city');
     }
 
+    if (selectedCountry !== 'all') {
+      params.set('country', selectedCountry);
+    } else {
+      params.delete('country');
+    }
+
     router.push(`/xicon?${params.toString()}`);
     setOpen(false);
   };
@@ -57,6 +72,7 @@ export function RegionFilter() {
   const clearFilters = () => {
     setSelectedState('all');
     setSelectedCity('all');
+    setSelectedCountry('all');
 
     const params = new URLSearchParams(searchParams.toString());
     params.delete('state');
@@ -66,7 +82,7 @@ export function RegionFilter() {
     setOpen(false);
   };
 
-  const hasFilters = selectedState !== 'all' || selectedCity !== 'all';
+  const hasFilters = selectedState !== 'all' || selectedCity !== 'all' || selectedCountry !== 'all';
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -79,7 +95,9 @@ export function RegionFilter() {
           <span>Filter</span>
           {hasFilters && (
             <span className="ml-1 rounded-full bg-primary px-2 py-0.5 text-xs text-white">
-              {(selectedState !== 'all' ? 1 : 0) + (selectedCity !== 'all' ? 1 : 0)}
+              {(selectedState !== 'all' ? 1 : 0) +
+                (selectedCity !== 'all' ? 1 : 0) +
+                (selectedCountry !== 'all' ? 1 : 0)}
             </span>
           )}
         </Button>
@@ -96,6 +114,23 @@ export function RegionFilter() {
         </div>
 
         <div className="mt-4 space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="country-filter">Country</Label>
+            <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+              <SelectTrigger id="country-filter">
+                <SelectValue placeholder="Select a country" />
+              </SelectTrigger>
+              <SelectContent className="popover-transparent">
+                <SelectItem value="all">All Countries</SelectItem>
+                {countries.map(country => (
+                  <SelectItem key={country} value={country}>
+                    {country}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="state-filter">State</Label>
             <Select value={selectedState} onValueChange={setSelectedState}>

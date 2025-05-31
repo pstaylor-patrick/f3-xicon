@@ -6,7 +6,20 @@
     "dev": "next dev --turbopack --port 3000",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:start": "pnpm dlx supabase start",
+    "db:stop": "pnpm dlx supabase stop --project-id f3-glossary",
+    "db:generate:migration": "drizzle-kit generate --config drizzle.config.ts",
+    "db:migrate": "drizzle-kit migrate --config drizzle.config.ts",
+    "db:push": "drizzle-kit push --config drizzle.config.ts",
+    "db:seed": "pnpm dlx bun scripts/db/seed.ts",
+    "db:seed:articles": "pnpm dlx bun scripts/db/articles/seed/seed.ts",
+    "db:seed:items": "pnpm dlx bun scripts/db/items/seed/seed.ts",
+    "db:seed:regions": "pnpm dlx bun scripts/db/regions/seed/seed.ts",
+    "db:reset": "pnpm dlx bun scripts/db/reset.ts",
+    "db:reset:articles": "pnpm dlx bun scripts/db/articles/reset/reset.ts",
+    "db:reset:items": "pnpm dlx bun scripts/db/items/reset/reset.ts",
+    "db:reset:regions": "pnpm dlx bun scripts/db/regions/reset/reset.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -37,16 +50,20 @@
     "@radix-ui/react-toggle": "1.1.1",
     "@radix-ui/react-toggle-group": "1.1.1",
     "@radix-ui/react-tooltip": "1.1.6",
+    "@types/pg": "^8.15.2",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
     "date-fns": "4.1.0",
+    "drizzle-kit": "^0.31.1",
+    "drizzle-orm": "^0.44.1",
     "embla-carousel-react": "8.5.1",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
     "next": "15.2.4",
     "next-themes": "^0.4.4",
+    "pg": "^8.16.0",
     "react": "^19",
     "react-day-picker": "8.10.1",
     "react-dom": "^19",
@@ -58,13 +75,15 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "vaul": "^0.9.6",
-    "zod": "^3.24.1"
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "bun": "^1.2.15",
     "postcss": "^8",
+    "supabase": "^2.23.4",
     "tailwindcss": "^3.4.17"
   }
 }

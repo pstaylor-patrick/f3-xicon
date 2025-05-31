@@ -1,9 +1,11 @@
-import { exicon, lexicon, qSourceArticles } from './xicon-data';
+import type { XiconItem } from '@/lib/types';
+import { getArticles } from '@/lib/articles';
+import { getItems } from '@/lib/items';
 import { getRegions } from '@/lib/regions';
-import type { XiconItem } from './types';
+import type { ItemTypeFilter } from '@/components/xicon-header';
 
 export type XiconFilter = {
-  kind?: 'exercise' | 'term' | 'article' | 'region';
+  kind?: ItemTypeFilter;
   tags?: string[];
   query?: string;
   tagsOperator?: 'AND' | 'OR';
@@ -13,38 +15,26 @@ export type XiconFilter = {
 
 export type XiconEntry = XiconItem;
 
-function generateId(title: string, type: string): string {
-  return `${type}-${title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`;
-}
-
 export async function getAllXicons(): Promise<XiconItem[]> {
-  const exercises: XiconItem[] = exicon.map(item => ({
-    id: generateId(item.title, 'exercise'),
-    title: item.title,
-    text: item.text,
-    type: 'exercise' as const,
-    tags: item.tags.length > 0 ? item.tags : undefined,
+  const items: XiconItem[] = (await getItems()).map(item => ({
+    id: `${item.type}-${item.slug}`,
+    title: item.name,
+    text: item.description,
+    type: item.type,
+    tags: item.tags,
   }));
 
-  const terms: XiconItem[] = lexicon.map(item => ({
-    id: generateId(item.title, 'term'),
-    title: item.title,
-    text: item.text,
-    type: 'term' as const,
-  }));
-
-  const articles: XiconItem[] = qSourceArticles.map(item => ({
-    id: generateId(item.title, 'article'),
-    title: item.title,
+  const articles: XiconItem[] = (await getArticles()).map(item => ({
+    id: `article-${item.slug}`,
+    title: item.name,
     text: item.fullText,
     type: 'article' as const,
-    quadrant: item.quadrant,
-    articleUrl: item.articleUrl,
-    featuredImageUrl: item.featuredImageUrl,
+    tags: item.tags,
+    articleUrl: item.srcUrl,
+    featuredImageUrl: item.thumbnailUrl,
   }));
 
-  const regions = await getRegions();
-  const regionItems: XiconItem[] = regions.map(item => ({
+  const regions: XiconItem[] = (await getRegions()).map(item => ({
     id: `region-${item.slug}`,
     title: item.name,
     text: `${item.city ? item.city + ', ' : ''}${item.state}`,
@@ -52,11 +42,12 @@ export async function getAllXicons(): Promise<XiconItem[]> {
     slug: item.slug,
     city: item.city,
     state: item.state,
-    websiteUrl: item.websiteUrl,
+    country: item.country,
+    websiteUrl: item.regionPageUrl,
     mapUrl: item.mapUrl,
   }));
 
-  return [...exercises, ...terms, ...articles, ...regionItems];
+  return [...items, ...articles, ...regions];
 }
 
 export async function getXiconById(id: string): Promise<XiconItem | undefined> {
@@ -163,6 +154,19 @@ export async function getAllCities(): Promise<string[]> {
   });
 
   return Array.from(citySet).sort();
+}
+
+export async function getAllCountries(): Promise<string[]> {
+  const countrySet = new Set<string>();
+  const regionItems = (await getAllXicons()).filter(item => item.type === 'region');
+
+  regionItems.forEach(item => {
+    if (item.country && item.country.trim() !== '') {
+      countrySet.add(item.country);
+    }
+  });
+
+  return Array.from(countrySet).sort();
 }
 
 export async function getRelatedXicons(entry: XiconItem, limit = 5): Promise<XiconItem[]> {
