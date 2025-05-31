@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { XiconEntry } from '@/lib/xicon';
+import { RelatedItems } from './related-items';
 import { badgeColor } from './xicon-card';
 
 interface ArticleDetailProps {
@@ -107,26 +108,12 @@ export function ArticleDetail({ entry, related, next, prev }: ArticleDetailProps
         </div>
 
         <div>
-          <h2 className="mb-4 text-xl font-semibold">Related Articles</h2>
           <div className="space-y-4">
             {related.length > 0 ? (
-              related
-                .filter(item => item.type === 'article')
-                .map(item => (
-                  <Link key={item.id} href={`/xicon/${item.id}`}>
-                    <div className="rounded-lg border p-4 transition-colors hover:bg-gray-50">
-                      <h3 className="font-medium">{item.title}</h3>
-                      <p className="mt-1 text-sm text-gray-600 line-clamp-2">
-                        {item.text.substring(0, 100)}
-                      </p>
-                      {item.quadrant && (
-                        <Badge variant="outline" className="mt-2 text-xs capitalize">
-                          {formatQuadrant(item.quadrant)}
-                        </Badge>
-                      )}
-                    </div>
-                  </Link>
-                ))
+              <RelatedItems
+                items={related.filter(item => item.type === 'article')}
+                title="Related Articles"
+              />
             ) : (
               <p className="text-gray-500">No related articles found</p>
             )}
