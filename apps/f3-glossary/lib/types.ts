@@ -36,6 +36,7 @@ export type XiconItem = {
   slug?: string;
   city?: string;
   state?: string;
+  country?: string;
   websiteUrl?: string;
   mapUrl?: string;
 };

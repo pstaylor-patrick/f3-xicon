@@ -42,6 +42,7 @@ export async function getAllXicons(): Promise<XiconItem[]> {
     slug: item.slug,
     city: item.city,
     state: item.state,
+    country: item.country,
     websiteUrl: item.regionPageUrl,
     mapUrl: item.mapUrl,
   }));
@@ -153,6 +154,19 @@ export async function getAllCities(): Promise<string[]> {
   });
 
   return Array.from(citySet).sort();
+}
+
+export async function getAllCountries(): Promise<string[]> {
+  const countrySet = new Set<string>();
+  const regionItems = (await getAllXicons()).filter(item => item.type === 'region');
+
+  regionItems.forEach(item => {
+    if (item.country && item.country.trim() !== '') {
+      countrySet.add(item.country);
+    }
+  });
+
+  return Array.from(countrySet).sort();
 }
 
 export async function getRelatedXicons(entry: XiconItem, limit = 5): Promise<XiconItem[]> {

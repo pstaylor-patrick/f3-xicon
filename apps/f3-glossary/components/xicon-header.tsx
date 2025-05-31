@@ -8,7 +8,7 @@ import { TagFilter } from '@/components/tag-filter';
 import { RegionFilter } from '@/components/region-filter';
 import { prepareParamsForTabSwitch } from '@/lib/prepare-tab-urls';
 
-type ItemTypeFilter = 'all' | 'exercise' | 'term' | 'article' | 'region';
+export type ItemTypeFilter = 'all' | 'exercise' | 'term' | 'article' | 'region';
 
 export function XiconHeader() {
   const router = useRouter();
