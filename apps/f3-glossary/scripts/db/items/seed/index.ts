@@ -1,80 +1,73 @@
 import { db } from '@/drizzle/db';
 import { itemsSchema } from '@/drizzle/schemas';
+import { kebabCase } from 'lodash';
+
+const LEXICON_GOOGLE_SHEETS_JSON_URL_ITEMS =
+  'https://sheets.googleapis.com/v4/spreadsheets/176smbOvZkK5AJJR034ZEgtbbflIVqySAc4sy8aiK46Y/values/Lexicon?key=AIzaSyCUFLnGh5pHkqh3TjPsJD-8hOZwGlxvRwQ';
+const EXICON_GOOGLE_SHEETS_JSON_URL_ITEMS =
+  'https://sheets.googleapis.com/v4/spreadsheets/176smbOvZkK5AJJR034ZEgtbbflIVqySAc4sy8aiK46Y/values/Exicon?key=AIzaSyCUFLnGh5pHkqh3TjPsJD-8hOZwGlxvRwQ';
 
 export async function seedItems() {
-  await db
-    .insert(itemsSchema)
-    .values([
-      {
-        slug: 'exercise-1',
-        type: 'exercise',
-        name: 'Exercise 1',
-        description: 'This is the description of exercise 1',
-        tags: ['tag1', 'tag2'],
-      },
-      {
-        slug: 'exercise-2',
-        type: 'exercise',
-        name: 'Exercise 2',
-        description: 'This is the description of exercise 2',
-        tags: ['tag3', 'tag4'],
-      },
-      {
-        slug: 'exercise-3',
-        type: 'exercise',
-        name: 'Exercise 3',
-        description: 'This is the description of exercise 3',
-        tags: ['tag5', 'tag6'],
-      },
-      {
-        slug: 'exercise-4',
-        type: 'exercise',
-        name: 'Exercise 4',
-        description: 'This is the description of exercise 4',
-        tags: ['tag7', 'tag8'],
-      },
-      {
-        slug: 'exercise-5',
-        type: 'exercise',
-        name: 'Exercise 5',
-        description: 'This is the description of exercise 5',
-        tags: ['tag9', 'tag10'],
-      },
-      {
-        slug: 'term-1',
-        type: 'term',
-        name: 'Term 1',
-        description: 'This is the description of term 1',
-        tags: ['tag11', 'tag12'],
-      },
-      {
-        slug: 'term-2',
-        type: 'term',
-        name: 'Term 2',
-        description: 'This is the description of term 2',
-        tags: ['tag13', 'tag14'],
-      },
-      {
-        slug: 'term-3',
-        type: 'term',
-        name: 'Term 3',
-        description: 'This is the description of term 3',
-        tags: ['tag15', 'tag16'],
-      },
-      {
-        slug: 'term-4',
-        type: 'term',
-        name: 'Term 4',
-        description: 'This is the description of term 4',
-        tags: ['tag17', 'tag18'],
-      },
-      {
-        slug: 'term-5',
-        type: 'term',
-        name: 'Term 5',
-        description: 'This is the description of term 5',
-        tags: ['tag19', 'tag20'],
-      },
-    ])
-    .onConflictDoNothing();
+  console.debug('seeding items');
+  const items = await fetchItems();
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    console.debug(`seeding item ${i + 1} of ${items.length}: ${item.type}: ${item.slug}`);
+    await db.insert(itemsSchema).values(item).onConflictDoNothing();
+  }
+  console.debug('done seeding items');
 }
+
+async function fetchItems(): Promise<Item[]> {
+  const lexicon = await fetchLexicon();
+  const exicon = await fetchExicon();
+  return [...lexicon, ...exicon];
+}
+
+async function fetchLexicon(): Promise<Item[]> {
+  const itemsRes = await fetch(LEXICON_GOOGLE_SHEETS_JSON_URL_ITEMS);
+  const itemsJson = (await itemsRes.json()) as ItemsResponse;
+  const items = itemsJson.values.slice(1).map(i => {
+    const title = i[0].trim();
+    const text = i[1].trim();
+    return {
+      slug: kebabCase(title),
+      type: 'term',
+      name: title,
+      description: text,
+      tags: [],
+    } as Item;
+  });
+  items.sort((a, b) => a.slug.localeCompare(b.slug));
+  return items;
+}
+
+async function fetchExicon(): Promise<Item[]> {
+  const itemsRes = await fetch(EXICON_GOOGLE_SHEETS_JSON_URL_ITEMS);
+  const itemsJson = (await itemsRes.json()) as ItemsResponse;
+  const items = itemsJson.values.slice(1).map(i => {
+    const title = i[0].trim();
+    const tags = i[1]
+      .trim()
+      .split('|')
+      .map(t => t.trim());
+    const text = i[2].trim();
+    return {
+      slug: kebabCase(title),
+      type: 'exercise',
+      name: title,
+      description: text,
+      tags: tags,
+    } as Item;
+  });
+  items.sort((a, b) => a.slug.localeCompare(b.slug));
+  return items;
+}
+
+type Item = typeof itemsSchema.$inferInsert;
+
+type ItemsResponse = {
+  range: string;
+  majorDimension: 'ROWS';
+  values: string[][];
+};
