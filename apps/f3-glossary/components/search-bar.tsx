@@ -9,6 +9,7 @@ import { Search, X } from 'lucide-react';
 import { useDebounce } from '@/hooks/use-debounce';
 import { getFilteredXicons } from '@/lib/xicon';
 import type { XiconEntry } from '@/lib/xicon';
+import { badgeColor } from './xicon-card';
 
 export function SearchBar() {
   const router = useRouter();
@@ -132,13 +133,7 @@ export function SearchBar() {
                 </div>
                 <div className="mt-1 flex items-center gap-2">
                   <span
-                    className={`text-xs px-2 py-0.5 rounded-full ${
-                      suggestion.type === 'exercise'
-                        ? 'bg-blue-100 text-blue-800'
-                        : suggestion.type === 'term'
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-purple-100 text-purple-800'
-                    }`}
+                    className={`text-xs px-2 py-0.5 rounded-full ${badgeColor[suggestion.type]}`}
                   >
                     {suggestion.type}
                   </span>

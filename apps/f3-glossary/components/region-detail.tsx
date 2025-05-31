@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import { RelatedItems } from '@/components/related-items';
 import type { XiconEntry } from '@/lib/xicon';
+import { badgeColor } from './xicon-card';
 
 const DEFAULT_WEBSITE_URL = 'https://freemensworkout.org/regions';
 const DEFAULT_MAP_URL = 'https://map.f3nation.com/';
@@ -31,9 +32,7 @@ export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="mb-6">
-            <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100">
-              Region
-            </Badge>
+            <Badge className={badgeColor.region}>Region</Badge>
           </div>
 
           <h1 className="mb-8 text-4xl font-bold tracking-tight">{title}</h1>

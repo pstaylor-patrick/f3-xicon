@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { RelatedItems } from '@/components/related-items';
 import type { XiconEntry } from '@/lib/xicon';
+import { badgeColor } from './xicon-card';
 
 interface EntryLayoutProps {
   entry: XiconEntry;
@@ -15,14 +16,6 @@ interface EntryLayoutProps {
 
 export function EntryLayout({ entry, related, next, prev }: EntryLayoutProps) {
   const { title, text, tags, type, articleUrl, featuredImageUrl } = entry;
-
-  // Determine badge color based on type
-  const badgeColor = {
-    exercise: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100',
-    term: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100',
-    article: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-100',
-    region: 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-100',
-  }[type];
 
   // Format text with basic markdown support
   const formatText = (text: string) => {
@@ -44,7 +37,7 @@ export function EntryLayout({ entry, related, next, prev }: EntryLayoutProps) {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="mb-6 flex flex-wrap items-center gap-2">
-            <Badge className={badgeColor}>{type}</Badge>
+            <Badge className={badgeColor[type]}>{type}</Badge>
             {type === 'exercise' &&
               tags
                 ?.filter(tag => tag)
