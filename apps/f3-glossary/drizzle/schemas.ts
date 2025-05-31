@@ -1,12 +1,14 @@
-import { pgTable, timestamp, uuid, varchar, text } from 'drizzle-orm/pg-core';
+import { pgTable, timestamp, uuid, varchar, text, pgEnum } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
 
-/** covers both exercises and terms */
+export const itemTypeEnum = pgEnum('item_type', ['exercise', 'term']);
+
 export const itemsSchema = pgTable('items', {
   id: uuid('id')
     .primaryKey()
     .default(sql`gen_random_uuid()`),
   slug: varchar('slug', { length: 255 }).unique().notNull(),
+  type: itemTypeEnum('type').notNull(),
   name: varchar('name', { length: 255 }).unique().notNull(),
   description: text('description').notNull(),
   tags: text('tags').array().notNull(),
@@ -20,6 +22,7 @@ export const articlesSchema = pgTable('articles', {
     .default(sql`gen_random_uuid()`),
   slug: varchar('slug', { length: 255 }).unique().notNull(),
   name: varchar('name', { length: 255 }).unique().notNull(),
+  thumbnailUrl: varchar('thumbnail_url', { length: 255 }).notNull(),
   fullText: text('full_text').notNull(),
   tags: text('tags').array().notNull(),
   srcUrl: varchar('src_url', { length: 255 }).unique().notNull(),
