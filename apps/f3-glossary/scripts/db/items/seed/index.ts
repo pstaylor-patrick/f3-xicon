@@ -2,8 +2,10 @@ import { db } from '@/drizzle/db';
 import { itemsSchema } from '@/drizzle/schemas';
 import { kebabCase } from 'lodash';
 
-const GOOGLE_SHEETS_JSON_URL_ITEMS =
+const LEXICON_GOOGLE_SHEETS_JSON_URL_ITEMS =
   'https://sheets.googleapis.com/v4/spreadsheets/176smbOvZkK5AJJR034ZEgtbbflIVqySAc4sy8aiK46Y/values/Lexicon?key=AIzaSyCUFLnGh5pHkqh3TjPsJD-8hOZwGlxvRwQ';
+const EXICON_GOOGLE_SHEETS_JSON_URL_ITEMS =
+  'https://sheets.googleapis.com/v4/spreadsheets/176smbOvZkK5AJJR034ZEgtbbflIVqySAc4sy8aiK46Y/values/Exicon?key=AIzaSyCUFLnGh5pHkqh3TjPsJD-8hOZwGlxvRwQ';
 
 export async function seedItems() {
   console.debug('seeding items');
@@ -17,7 +19,13 @@ export async function seedItems() {
 }
 
 async function fetchItems(): Promise<Item[]> {
-  const itemsRes = await fetch(GOOGLE_SHEETS_JSON_URL_ITEMS);
+  const lexicon = await fetchLexicon();
+  const exicon = await fetchExicon();
+  return [...lexicon, ...exicon];
+}
+
+async function fetchLexicon(): Promise<Item[]> {
+  const itemsRes = await fetch(LEXICON_GOOGLE_SHEETS_JSON_URL_ITEMS);
   const itemsJson = (await itemsRes.json()) as ItemsResponse;
   const items = itemsJson.values.slice(1).map(i => {
     const title = i[0].trim();
@@ -28,6 +36,28 @@ async function fetchItems(): Promise<Item[]> {
       name: title,
       description: text,
       tags: [],
+    } as Item;
+  });
+  items.sort((a, b) => a.slug.localeCompare(b.slug));
+  return items;
+}
+
+async function fetchExicon(): Promise<Item[]> {
+  const itemsRes = await fetch(EXICON_GOOGLE_SHEETS_JSON_URL_ITEMS);
+  const itemsJson = (await itemsRes.json()) as ItemsResponse;
+  const items = itemsJson.values.slice(1).map(i => {
+    const title = i[0].trim();
+    const tags = i[1]
+      .trim()
+      .split('|')
+      .map(t => t.trim());
+    const text = i[2].trim();
+    return {
+      slug: kebabCase(title),
+      type: 'exercise',
+      name: title,
+      description: text,
+      tags: tags,
     } as Item;
   });
   items.sort((a, b) => a.slug.localeCompare(b.slug));
