@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { XiconEntry } from '@/lib/xicon';
 import { RelatedItems } from './related-items';
+import { badgeColor } from './xicon-card';
 
 interface ArticleDetailProps {
   entry: XiconEntry;
@@ -47,7 +48,7 @@ export function ArticleDetail({ entry, related, next, prev }: ArticleDetailProps
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         <div className="md:col-span-2">
           <div className="mb-4 flex flex-wrap items-center gap-2">
-            <Badge className="bg-purple-100 text-purple-800">Article</Badge>
+            <Badge className={badgeColor.article}>Article</Badge>
             {quadrant && (
               <Badge variant="outline" className="capitalize">
                 {formatQuadrant(quadrant)}

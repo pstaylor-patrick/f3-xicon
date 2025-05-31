@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { RelatedItems } from '@/components/related-items';
 import type { XiconEntry } from '@/lib/xicon';
+import { badgeColor } from './xicon-card';
 
 interface ExerciseDetailProps {
   entry: XiconEntry;
@@ -35,9 +36,7 @@ export function ExerciseDetail({ entry, related, next, prev }: ExerciseDetailPro
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="mb-6 flex flex-wrap items-center gap-2">
-            <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-100">
-              Exercise
-            </Badge>
+            <Badge className={badgeColor.exercise}>Exercise</Badge>
             {tags &&
               tags.filter(Boolean).map(tag => (
                 <Badge key={tag} variant="outline" className="capitalize">
