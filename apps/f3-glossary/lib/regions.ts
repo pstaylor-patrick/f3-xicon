@@ -1,41 +1,28 @@
 'use server';
 
-import type { Region } from '@/types';
+import { regionsSchema } from '@/drizzle/schemas';
 import type { LatLng } from './mapUtils';
-import { getMapUrl } from './mapUtils';
+import { db } from '@/drizzle/db';
+import { asc, eq } from 'drizzle-orm';
+
+export type Region = typeof regionsSchema.$inferSelect;
+
+export async function getRegions(): Promise<Region[]> {
+  const regions = await db.select().from(regionsSchema).orderBy(asc(regionsSchema.name));
+  return regions;
+}
+
+export async function getRegionBySlug(slug: string): Promise<Region | undefined> {
+  const [region] = await db
+    .select()
+    .from(regionsSchema)
+    .where(eq(regionsSchema.slug, slug))
+    .limit(1);
+  return region;
+}
 
 const GOOGLE_SHEETS_JSON_URL_POINTS =
   'https://sheets.googleapis.com/v4/spreadsheets/1lfbDLW4aj_BJgEzX6A0AoTWb33BYIskko5ggjffOrrg/values/Points?key=AIzaSyCUFLnGh5pHkqh3TjPsJD-8hOZwGlxvRwQ';
-
-export async function getRegions(): Promise<Region[]> {
-  const points = await getPoints();
-  const header = points.values[0];
-  const rows = points.values.slice(1);
-  const colNums = getColNums(header);
-  const regionNames = [...new Set(rows.map(row => row[colNums.region]))];
-  const locationsByRegion = getLocationsByRegion(rows, colNums);
-  const latLngByRegion = getLatLngByRegion(rows, colNums);
-  const regions: Region[] = [];
-
-  for (let i = 0; i < regionNames.length; i++) {
-    const name = regionNames[i];
-    const { city, state } = getLocation(name, locationsByRegion);
-    const mapUrl = getMapUrl(name, latLngByRegion);
-    const slug = toKebabCase(name);
-    const websiteUrl = `https://freemensworkout.org/regions/${slug}`;
-
-    const region: Region = {
-      slug,
-      name,
-      city,
-      state,
-      websiteUrl,
-      mapUrl,
-    };
-    regions.push(region);
-  }
-  return regions;
-}
 
 const getPoints = async () => {
   const res = await fetch(GOOGLE_SHEETS_JSON_URL_POINTS);

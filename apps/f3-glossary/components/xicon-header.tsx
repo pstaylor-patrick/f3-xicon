@@ -8,17 +8,19 @@ import { TagFilter } from '@/components/tag-filter';
 import { RegionFilter } from '@/components/region-filter';
 import { prepareParamsForTabSwitch } from '@/lib/prepare-tab-urls';
 
+type ItemTypeFilter = 'all' | 'exercise' | 'term' | 'article' | 'region';
+
 export function XiconHeader() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [activeTab, setActiveTab] = useState<'all' | 'exercise' | 'term' | 'article' | 'region'>(
-    (searchParams.get('kind') as any) || 'all'
+  const [activeTab, setActiveTab] = useState<ItemTypeFilter>(
+    (searchParams.get('kind') as ItemTypeFilter) || 'all'
   );
 
   // Update URL when tab changes
   const handleTabChange = (value: string) => {
-    const newTab = value as 'all' | 'exercise' | 'term' | 'article' | 'region';
-    const currentKind = searchParams.get('kind') || 'all';
+    const newTab = value as ItemTypeFilter;
+    const currentKind = (searchParams.get('kind') as ItemTypeFilter) || 'all';
 
     setActiveTab(newTab);
 
