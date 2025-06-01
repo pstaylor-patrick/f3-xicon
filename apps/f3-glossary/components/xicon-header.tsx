@@ -30,7 +30,7 @@ export function XiconHeader() {
       searchParams,
     });
 
-    router.push(`/xicon?${newParams.toString()}`);
+    router.push(`/?${newParams.toString()}`);
   };
 
   return (

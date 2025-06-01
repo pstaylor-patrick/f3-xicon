@@ -90,7 +90,7 @@ export default function XiconPage() {
       params.set('kind', newTab);
     }
 
-    window.history.pushState({}, '', `/xicon?${params.toString()}`);
+    window.history.pushState({}, '', `/?${params.toString()}`);
   };
 
   return (

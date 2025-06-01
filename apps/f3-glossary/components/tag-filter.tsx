@@ -47,7 +47,7 @@ export function TagFilter() {
       params.delete('tagsOperator');
     }
 
-    router.push(`/xicon?${params.toString()}`);
+    router.push(`/?${params.toString()}`);
     setOpen(false);
   };
 
@@ -65,7 +65,7 @@ export function TagFilter() {
     params.delete('tags');
     params.delete('tagsOperator');
 
-    router.push(`/xicon?${params.toString()}`);
+    router.push(`/?${params.toString()}`);
     setOpen(false);
   };
 

@@ -40,7 +40,7 @@ export function ArticleDetail({ entry, related, next, prev }: ArticleDetailProps
   return (
     <div className="container mx-auto px-4 py-6">
       <div className="mb-6">
-        <Link href="/xicon" className="text-gray-500 hover:text-gray-700">
+        <Link href="/" className="text-gray-500 hover:text-gray-700">
           ← Back to search
         </Link>
       </div>
