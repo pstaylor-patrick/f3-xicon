@@ -63,7 +63,7 @@ export function SearchBar() {
       params.delete('q');
     }
 
-    router.push(`/xicon?${params.toString()}`);
+    router.push(`/?${params.toString()}`);
     setShowSuggestions(false);
   };
 
@@ -85,7 +85,7 @@ export function SearchBar() {
     setQuery('');
     const params = new URLSearchParams(searchParams.toString());
     params.delete('q');
-    router.push(`/xicon?${params.toString()}`);
+    router.push(`/?${params.toString()}`);
   };
 
   return (

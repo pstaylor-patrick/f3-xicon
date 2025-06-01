@@ -29,7 +29,7 @@ export function EntryLayout({ entry, related, next, prev }: EntryLayoutProps) {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <Link href="/xicon" className="text-muted-foreground hover:text-foreground">
+        <Link href="/" className="text-muted-foreground hover:text-foreground">
           ← Back to search
         </Link>
       </div>

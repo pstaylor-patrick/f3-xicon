@@ -64,7 +64,7 @@ export function RegionFilter() {
       params.delete('country');
     }
 
-    router.push(`/xicon?${params.toString()}`);
+    router.push(`/?${params.toString()}`);
     setOpen(false);
   };
 
@@ -78,7 +78,7 @@ export function RegionFilter() {
     params.delete('state');
     params.delete('city');
 
-    router.push(`/xicon?${params.toString()}`);
+    router.push(`/?${params.toString()}`);
     setOpen(false);
   };
 
