@@ -84,7 +84,7 @@ export function ArticleDetail({ entry, related, next, prev }: ArticleDetailProps
 
           <div className="mt-8 flex justify-between">
             {prev ? (
-              <Link href={`/xicon/${prev.id}`}>
+              <Link href={`/${prev.id}`}>
                 <Button variant="outline" className="flex items-center gap-2">
                   <ChevronLeft className="h-4 w-4" />
                   <span>Previous</span>
@@ -95,7 +95,7 @@ export function ArticleDetail({ entry, related, next, prev }: ArticleDetailProps
             )}
 
             {next ? (
-              <Link href={`/xicon/${next.id}`}>
+              <Link href={`/${next.id}`}>
                 <Button variant="outline" className="flex items-center gap-2">
                   <span>Next</span>
                   <ChevronRight className="h-4 w-4" />

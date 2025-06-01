@@ -21,7 +21,7 @@ export function RelatedItems({ items, title, className = '' }: RelatedItemsProps
           displayedItems.map((item, idx) => (
             <Link
               key={item.id}
-              href={`/xicon/${item.id}`}
+              href={`/${item.id}`}
               className={`block ${idx !== displayedItems.length - 1 ? 'mb-6' : ''}`}
             >
               <div className="rounded-xl border bg-background p-4 transition-colors hover:bg-accent">
