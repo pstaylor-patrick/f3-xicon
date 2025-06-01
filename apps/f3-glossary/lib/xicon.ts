@@ -124,6 +124,15 @@ export async function getFilteredXicons(filter: XiconFilter): Promise<XiconItem[
     });
   }
 
+  // Filter by country (for regions)
+  if (filter.country) {
+    const countryLower = filter.country.toLowerCase();
+    items = items.filter(item => {
+      if (item.type !== 'region') return true;
+      return item.country?.toLowerCase().includes(countryLower);
+    });
+  }
+
   return items;
 }
 
