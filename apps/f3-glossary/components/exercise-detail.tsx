@@ -66,7 +66,7 @@ export function ExerciseDetail({ entry, related, next, prev }: ExerciseDetailPro
 
           <div className="mt-12 flex justify-between">
             {prev ? (
-              <Link href={`/xicon/${prev.id}`}>
+              <Link href={`/${prev.id}`}>
                 <Button variant="outline" className="flex items-center gap-2">
                   <ChevronLeft className="h-4 w-4" />
                   <span>Previous</span>
@@ -77,7 +77,7 @@ export function ExerciseDetail({ entry, related, next, prev }: ExerciseDetailPro
             )}
 
             {next ? (
-              <Link href={`/xicon/${next.id}`}>
+              <Link href={`/${next.id}`}>
                 <Button variant="outline" className="flex items-center gap-2">
                   <span>Next</span>
                   <ChevronRight className="h-4 w-4" />

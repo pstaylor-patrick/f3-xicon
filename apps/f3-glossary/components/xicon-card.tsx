@@ -19,7 +19,7 @@ export function XiconCard({ entry }: XiconCardProps) {
   const { id, title, text, tags, type, city, state } = entry;
 
   return (
-    <Link href={`/xicon/${id}`}>
+    <Link href={`/${id}`}>
       <Card className="h-full overflow-hidden transition-shadow hover:shadow-md">
         <CardContent className="p-4">
           <div className="flex items-start justify-between">

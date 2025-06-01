@@ -165,26 +165,20 @@ export default function Dashboard() {
               <NavigationMenuContent className="bg-gray-800 p-4 rounded-md">
                 <ul className="grid gap-3 w-[200px]">
                   <li>
-                    <NavigationMenuLink
-                      href="/xicon/region/raleigh"
-                      className="hover:underline text-sm"
-                    >
+                    <NavigationMenuLink href="/region/raleigh" className="hover:underline text-sm">
                       Raleigh
                     </NavigationMenuLink>
                   </li>
                   <li>
                     <NavigationMenuLink
-                      href="/xicon/region/charlotte"
+                      href="/region/charlotte"
                       className="hover:underline text-sm"
                     >
                       Charlotte
                     </NavigationMenuLink>
                   </li>
                   <li>
-                    <NavigationMenuLink
-                      href="/xicon/region/durham"
-                      className="hover:underline text-sm"
-                    >
+                    <NavigationMenuLink href="/region/durham" className="hover:underline text-sm">
                       Durham
                     </NavigationMenuLink>
                   </li>

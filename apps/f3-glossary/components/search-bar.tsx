@@ -69,7 +69,7 @@ export function SearchBar() {
 
   // Handle suggestion click
   const handleSuggestionClick = (id: string) => {
-    router.push(`/xicon/${id}`);
+    router.push(`/${id}`);
     setShowSuggestions(false);
   };
 
