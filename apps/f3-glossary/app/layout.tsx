@@ -5,16 +5,30 @@ import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 
 const inter = Inter({ subsets: ['latin'] });
+const title = 'F3 Nation Xicon';
+const description = 'Search exercises, terms, and articles from F3 Nation';
 
 export const metadata: Metadata = {
-  title: 'F3 Nation Xicon',
-  description: 'Search exercises, terms, and articles from F3 Nation',
-  generator: 'v0.dev',
+  title,
+  description,
+  icons: {
+    icon: '/favicon.png',
+  },
+  openGraph: {
+    images: ['/f3-workout.png'],
+    type: 'website',
+    title,
+    description,
+    url: 'https://xicon.freemensworkout.org',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link rel="icon" href="/favicon.png" />
+      </head>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
