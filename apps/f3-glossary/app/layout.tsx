@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     icon: '/favicon.png',
   },
   openGraph: {
-    images: ['/f3-workout.png'],
+    images: ['/f3-workout.jpg'],
     type: 'website',
     title,
     description,
