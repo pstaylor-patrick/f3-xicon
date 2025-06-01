@@ -273,3 +273,36 @@ export async function getNextPrevXicons(
 
   return { next, prev };
 }
+
+export async function getCountryStateCityMap(): Promise<Record<string, Record<string, string[]>>> {
+  const map: Record<string, Record<string, Set<string>>> = {};
+
+  const regions = (await getAllXicons()).filter(item => item.type === 'region');
+
+  regions.forEach(region => {
+    const country = region.country?.trim() || 'Unknown';
+    const state = region.state?.trim() || 'Unknown';
+    const city = region.city?.trim() || 'Unknown';
+
+    if (!map[country]) {
+      map[country] = {};
+    }
+
+    if (!map[country][state]) {
+      map[country][state] = new Set();
+    }
+
+    map[country][state].add(city);
+  });
+
+  // Convert Set → Array
+  const result: Record<string, Record<string, string[]>> = {};
+  for (const country in map) {
+    result[country] = {};
+    for (const state in map[country]) {
+      result[country][state] = Array.from(map[country][state]).sort();
+    }
+  }
+
+  return result;
+}

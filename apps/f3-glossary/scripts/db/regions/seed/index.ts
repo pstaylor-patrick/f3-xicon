@@ -31,7 +31,6 @@ async function fetchRegions(): Promise<Region[]> {
   for (let i = 0; i < regionNames.length; i++) {
     const name = regionNames[i];
     const { city, state, country } = getLocation(name, locationsByRegion);
-    if (country !== 'United States') continue;
     const mapUrl = getMapUrl(name, latLngByRegion);
     const slug = kebabCase(name);
     const websiteUrl = `https://freemensworkout.org/regions/${slug}`;
