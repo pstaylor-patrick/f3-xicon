@@ -30,7 +30,7 @@ async function fetchRegions(): Promise<Region[]> {
 
   for (let i = 0; i < regionNames.length; i++) {
     const name = regionNames[i];
-    const { city, state } = getLocation(name, locationsByRegion);
+    const { city, state, country } = getLocation(name, locationsByRegion);
     const mapUrl = getMapUrl(name, latLngByRegion);
     const slug = kebabCase(name);
     const websiteUrl = `https://freemensworkout.org/regions/${slug}`;
@@ -40,7 +40,7 @@ async function fetchRegions(): Promise<Region[]> {
       name,
       city,
       state,
-      country: 'United States',
+      country,
       regionPageUrl: websiteUrl,
       mapUrl,
       tags: [],
@@ -161,12 +161,13 @@ const getLatLngByRegion = (rows: string[][], colNums: ColNums) => {
  */
 const getLocation = (regionName: string, locationsByRegion: Record<string, string[]>) => {
   const locations = [
-    ...new Set(locationsByRegion[regionName].map(location => extractCityState(location))),
+    ...new Set(locationsByRegion[regionName].map(location => extractCityStateCountry(location))),
   ];
   const location = locations[0].split(',');
   return {
     city: location[0].trim(),
     state: location[1].trim(),
+    country: location[2]?.trim(),
   };
 };
 
@@ -180,7 +181,7 @@ const getLocation = (regionName: string, locationsByRegion: Record<string, strin
  * @param location - a comma-separated address string
  * @returns "City, State" or an empty string if it can't parse
  */
-const extractCityState = (location: string) => {
+const extractCityStateCountry = (location: string) => {
   // Split on commas, trim whitespace, drop any empty segments
   const parts = location
     .split(',')
@@ -195,6 +196,7 @@ const extractCityState = (location: string) => {
   // City is the 4th-to-last segment, state is the 3rd-to-last
   const city = parts[parts.length - 4];
   const state = parts[parts.length - 3];
+  const country = parts[parts.length - 1];
 
-  return `${city}, ${state}`;
+  return `${city}, ${state}, ${country}`;
 };

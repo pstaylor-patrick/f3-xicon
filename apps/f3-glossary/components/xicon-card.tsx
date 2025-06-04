@@ -16,7 +16,7 @@ interface XiconCardProps {
 }
 
 export function XiconCard({ entry }: XiconCardProps) {
-  const { id, title, text, tags, type, city, state } = entry;
+  const { id, title, text, tags, type, city, state, country } = entry;
 
   return (
     <Link href={`/${id}`}>
@@ -35,6 +35,7 @@ export function XiconCard({ entry }: XiconCardProps) {
               <p className="text-sm text-gray-600">
                 {city ? city + ', ' : ''}
                 {state}
+                {country ? ', ' + country : ''}
               </p>
             ) : (
               <p className="text-sm text-gray-600 line-clamp-3">{text.substring(0, 120)}</p>

@@ -13,68 +13,85 @@ import {
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
 import { Filter, X } from 'lucide-react';
-import { getAllStates, getAllCities, getAllCountries } from '@/lib/xicon';
+import { getCountryStateCityMap } from '@/lib/xicon';
 
 export function RegionFilter() {
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const [locationMap, setLocationMap] = useState<Record<string, Record<string, string[]>>>({});
+  const [countries, setCountries] = useState<string[]>([]);
   const [states, setStates] = useState<string[]>([]);
   const [cities, setCities] = useState<string[]>([]);
-  const [countries, setCountries] = useState<string[]>([]);
-  const [selectedState, setSelectedState] = useState<string>(searchParams.get('state') || 'all');
-  const [selectedCity, setSelectedCity] = useState<string>(searchParams.get('city') || 'all');
+
   const [selectedCountry, setSelectedCountry] = useState<string>(
     searchParams.get('country') || 'all'
   );
+  const [selectedState, setSelectedState] = useState<string>(searchParams.get('state') || 'all');
+  const [selectedCity, setSelectedCity] = useState<string>(searchParams.get('city') || 'all');
   const [open, setOpen] = useState(false);
 
-  // Load all states and cities
+  // Load location map and countries
   useEffect(() => {
     (async () => {
-      const [states, cities, countries] = await Promise.all([
-        getAllStates(),
-        getAllCities(),
-        getAllCountries(),
-      ]);
-      setStates(states);
-      setCities(cities);
-      setCountries(countries);
+      const map = await getCountryStateCityMap();
+      setLocationMap(map);
+      setCountries(Object.keys(map).sort());
     })();
   }, []);
 
-  // Update URL when filters change
+  // Update states when country changes
+  useEffect(() => {
+    if (selectedCountry === 'all' || !locationMap[selectedCountry]) {
+      setStates([]);
+      setSelectedState('all');
+      setCities([]);
+      setSelectedCity('all');
+      return;
+    }
+
+    const statesForCountry = Object.keys(locationMap[selectedCountry]);
+    setStates(statesForCountry.sort());
+    setSelectedState('all');
+    setCities([]);
+    setSelectedCity('all');
+  }, [selectedCountry, locationMap]);
+
+  // Update cities when state changes
+  useEffect(() => {
+    if (
+      selectedCountry === 'all' ||
+      selectedState === 'all' ||
+      !locationMap[selectedCountry]?.[selectedState]
+    ) {
+      setCities([]);
+      setSelectedCity('all');
+      return;
+    }
+
+    const citiesForState = locationMap[selectedCountry][selectedState];
+    setCities(citiesForState.sort());
+    setSelectedCity('all');
+  }, [selectedState, selectedCountry, locationMap]);
+
   const updateFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
 
-    if (selectedState !== 'all') {
-      params.set('state', selectedState);
-    } else {
-      params.delete('state');
-    }
-
-    if (selectedCity !== 'all') {
-      params.set('city', selectedCity);
-    } else {
-      params.delete('city');
-    }
-
-    if (selectedCountry !== 'all') {
-      params.set('country', selectedCountry);
-    } else {
-      params.delete('country');
-    }
+    selectedCountry !== 'all' ? params.set('country', selectedCountry) : params.delete('country');
+    selectedState !== 'all' ? params.set('state', selectedState) : params.delete('state');
+    selectedCity !== 'all' ? params.set('city', selectedCity) : params.delete('city');
 
     router.push(`/?${params.toString()}`);
     setOpen(false);
   };
 
-  // Clear all filters
   const clearFilters = () => {
+    setSelectedCountry('all');
     setSelectedState('all');
     setSelectedCity('all');
-    setSelectedCountry('all');
 
     const params = new URLSearchParams(searchParams.toString());
+    params.delete('country');
     params.delete('state');
     params.delete('city');
 
@@ -82,7 +99,7 @@ export function RegionFilter() {
     setOpen(false);
   };
 
-  const hasFilters = selectedState !== 'all' || selectedCity !== 'all' || selectedCountry !== 'all';
+  const hasFilters = selectedCountry !== 'all' || selectedState !== 'all' || selectedCity !== 'all';
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -95,9 +112,9 @@ export function RegionFilter() {
           <span>Filter</span>
           {hasFilters && (
             <span className="ml-1 rounded-full bg-primary px-2 py-0.5 text-xs text-white">
-              {(selectedState !== 'all' ? 1 : 0) +
-                (selectedCity !== 'all' ? 1 : 0) +
-                (selectedCountry !== 'all' ? 1 : 0)}
+              {(selectedCountry !== 'all' ? 1 : 0) +
+                (selectedState !== 'all' ? 1 : 0) +
+                (selectedCity !== 'all' ? 1 : 0)}
             </span>
           )}
         </Button>
