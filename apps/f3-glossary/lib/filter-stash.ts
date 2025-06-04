@@ -6,6 +6,7 @@ type ExerciseFilter = {
 };
 
 type RegionFilter = {
+  country?: string;
   state?: string;
   city?: string;
 };
@@ -25,8 +26,8 @@ export function getExerciseFilters(): ExerciseFilter {
   return exerciseStash;
 }
 
-export function stashRegionFilters(state?: string, city?: string) {
-  regionStash = { state, city };
+export function stashRegionFilters(country?: string, state?: string, city?: string) {
+  regionStash = { country, state, city };
 }
 
 export function getRegionFilters(): RegionFilter {

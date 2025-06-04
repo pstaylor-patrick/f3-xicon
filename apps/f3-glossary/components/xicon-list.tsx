@@ -29,6 +29,9 @@ export function XiconList() {
       tags: searchParams.get('tags')?.split(',').filter(Boolean) || [],
       query: searchParams.get('q') || '',
       tagsOperator: (searchParams.get('tagsOperator') as 'AND' | 'OR') || 'OR',
+      country: searchParams.get('country') || '',
+      state: searchParams.get('state') || '',
+      city: searchParams.get('city') || '',
     };
 
     setPage(1);

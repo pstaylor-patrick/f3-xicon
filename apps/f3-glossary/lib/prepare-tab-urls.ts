@@ -27,9 +27,11 @@ export function prepareParamsForTabSwitch({
   }
 
   if (currentTab === 'region') {
+    const country = searchParams.get('country') || undefined;
     const state = searchParams.get('state') || undefined;
     const city = searchParams.get('city') || undefined;
-    stashRegionFilters(state, city);
+    stashRegionFilters(country, state, city);
+    params.delete('country');
     params.delete('state');
     params.delete('city');
   }
@@ -53,7 +55,8 @@ export function prepareParamsForTabSwitch({
   }
 
   if (newTab === 'region') {
-    const { state, city } = getRegionFilters();
+    const { country, state, city } = getRegionFilters();
+    if (country) params.set('country', country);
     if (state) params.set('state', state);
     if (city) params.set('city', city);
   }
