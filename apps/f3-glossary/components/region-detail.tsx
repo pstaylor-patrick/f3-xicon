@@ -7,6 +7,9 @@ import { ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import { RelatedItems } from '@/components/related-items';
 import type { XiconEntry } from '@/lib/xicon';
 import { badgeColor } from './xicon-card';
+import { useSearchParams } from 'next/navigation';
+import { haversineDistance, LatLng } from '@/lib/mapUtils';
+import { useEffect, useState } from 'react';
 
 const DEFAULT_WEBSITE_URL = 'https://freemensworkout.org/regions';
 const DEFAULT_MAP_URL = 'https://map.f3nation.com/';
@@ -19,12 +22,24 @@ interface RegionDetailProps {
 }
 
 export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) {
-  const { title, city, state, slug, websiteUrl, mapUrl } = entry;
+  const { title, city, state, slug, websiteUrl, mapUrl, latLng } = entry;
+
+  const searchParams = useSearchParams();
+  const lat = searchParams.get('lat');
+  const lng = searchParams.get('lng');
+  const filterLatLng =
+    lat && lng ? ({ lat: parseFloat(lat), lng: parseFloat(lng) } as LatLng) : undefined;
+  if (!latLng) {
+    throw new Error('latLng is undefined');
+  }
+
+  /** @todo more dynamic back href including other tabs like terms or exercises */
+  const backHref = latLng && filterLatLng ? `/?kind=region&lat=${lat}&lng=${lng}` : '/';
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <Link href="/" className="text-muted-foreground hover:text-foreground">
+        <Link href={backHref} className="text-muted-foreground hover:text-foreground">
           ← Back to search
         </Link>
       </div>
@@ -43,6 +58,13 @@ export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) 
               <span className="text-lg">
                 {city ? city + ', ' : ''}
                 {state}
+                {latLng && filterLatLng ? (
+                  <span>
+                    {' (' +
+                      (Math.round(haversineDistance(latLng, filterLatLng) * 10) / 10).toFixed(1) +
+                      ' mi away)'}
+                  </span>
+                ) : null}
               </span>
             </div>
           </div>
@@ -67,34 +89,11 @@ export function RegionDetail({ entry, related, next, prev }: RegionDetailProps) 
               </Button>
             </Link>
           </div>
-
-          <div className="mt-12 flex justify-between">
-            {prev ? (
-              <Link href={`/${prev.id}`}>
-                <Button variant="outline" className="flex items-center gap-2">
-                  <ChevronLeft className="h-4 w-4" />
-                  <span>Previous</span>
-                </Button>
-              </Link>
-            ) : (
-              <div />
-            )}
-
-            {next ? (
-              <Link href={`/${next.id}`}>
-                <Button variant="outline" className="flex items-center gap-2">
-                  <span>Next</span>
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            ) : (
-              <div />
-            )}
-          </div>
         </div>
 
         <div className="lg:mt-0">
           <RelatedItems
+            entry={entry}
             items={related.filter(item => item.type === 'region')}
             title="Nearby Regions"
           />

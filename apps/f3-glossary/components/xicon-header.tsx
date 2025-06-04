@@ -7,6 +7,8 @@ import { SearchBar } from '@/components/search-bar';
 import { TagFilter } from '@/components/tag-filter';
 import { RegionFilter } from '@/components/region-filter';
 import { prepareParamsForTabSwitch } from '@/lib/prepare-tab-urls';
+import { RegionsNearMeButton } from './regions-near-me-button';
+import { MobileBottomBar } from './MobileBottomBar';
 
 export type ItemTypeFilter = 'all' | 'exercise' | 'term' | 'article' | 'region';
 
@@ -52,8 +54,17 @@ export function XiconHeader() {
           </Tabs>
         </div>
         {activeTab === 'exercise' && <TagFilter />}
-        {activeTab === 'region' && <RegionFilter />}
+        {activeTab === 'region' && (
+          <>
+            <div className="hidden sm:flex mr-4">
+              <RegionsNearMeButton />
+            </div>
+            <RegionFilter />
+          </>
+        )}
       </div>
+      {/* Mobile bottom bar only when region tab is active */}
+      {activeTab === 'region' && <MobileBottomBar />}
     </div>
   );
 }

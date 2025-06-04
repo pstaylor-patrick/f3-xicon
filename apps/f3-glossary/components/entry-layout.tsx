@@ -99,6 +99,7 @@ export function EntryLayout({ entry, related, next, prev }: EntryLayoutProps) {
 
         <div className="lg:mt-0">
           <RelatedItems
+            entry={entry}
             items={related}
             title={`Related ${type === 'exercise' ? 'Exercises' : type === 'term' ? 'Terms' : type === 'article' ? 'Articles' : 'Regions'}`}
           />

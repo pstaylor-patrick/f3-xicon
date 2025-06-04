@@ -5,6 +5,7 @@ import { ArticleDetail } from '@/components/article-detail';
 import { RegionDetail } from '@/components/region-detail';
 import { notFound } from 'next/navigation';
 import type { XiconFilter } from '@/lib/xicon';
+import { LatLng } from '@/lib/mapUtils';
 
 interface XiconDetailPageProps {
   params: {
@@ -47,9 +48,10 @@ export default async function XiconDetailPage({ params, searchParams }: XiconDet
         : 'OR',
     city: typeof resolvedSearchParams.city === 'string' ? resolvedSearchParams.city : undefined,
     state: typeof resolvedSearchParams.state === 'string' ? resolvedSearchParams.state : undefined,
+    latLng: entry.latLng ? (entry.latLng as LatLng) : undefined,
   };
 
-  const { next, prev } = await getNextPrevXicons(id, filter);
+  const { next, prev } = await getNextPrevXicons(entry, filter);
 
   // Render the appropriate detail component based on entry type
   switch (entry.type) {

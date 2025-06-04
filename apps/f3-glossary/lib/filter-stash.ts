@@ -9,6 +9,8 @@ type RegionFilter = {
   country?: string;
   state?: string;
   city?: string;
+  lat?: number;
+  lng?: number;
 };
 
 let exerciseStash: ExerciseFilter = {
@@ -26,8 +28,14 @@ export function getExerciseFilters(): ExerciseFilter {
   return exerciseStash;
 }
 
-export function stashRegionFilters(country?: string, state?: string, city?: string) {
-  regionStash = { country, state, city };
+export function stashRegionFilters(
+  country?: string,
+  state?: string,
+  city?: string,
+  lat?: number,
+  lng?: number
+) {
+  regionStash = { country, state, city, lat, lng };
 }
 
 export function getRegionFilters(): RegionFilter {

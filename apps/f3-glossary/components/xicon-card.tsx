@@ -13,13 +13,19 @@ export const badgeColor = {
 
 interface XiconCardProps {
   entry: XiconEntry;
+  filterLatLng?: import('@/lib/mapUtils').LatLng;
 }
 
-export function XiconCard({ entry }: XiconCardProps) {
+export function XiconCard({ entry, filterLatLng }: XiconCardProps) {
   const { id, title, text, tags, type, city, state } = entry;
 
+  const href =
+    entry.latLng && filterLatLng
+      ? `/${id}?lat=${filterLatLng?.lat}&lng=${filterLatLng?.lng}`
+      : `/${id}`;
+
   return (
-    <Link href={`/${id}`}>
+    <Link href={href}>
       <Card className="h-full overflow-hidden transition-shadow hover:shadow-md">
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
@@ -35,6 +41,18 @@ export function XiconCard({ entry }: XiconCardProps) {
               <p className="text-sm text-gray-600">
                 {city ? city + ', ' : ''}
                 {state}
+                {entry.latLng && filterLatLng ? (
+                  <span>
+                    {' (' +
+                      (
+                        Math.round(
+                          require('@/lib/mapUtils').haversineDistance(entry.latLng, filterLatLng) *
+                            10
+                        ) / 10
+                      ).toFixed(1) +
+                      ' mi away)'}
+                  </span>
+                ) : null}
               </p>
             ) : (
               <p className="text-sm text-gray-600 line-clamp-3">{text.substring(0, 120)}</p>

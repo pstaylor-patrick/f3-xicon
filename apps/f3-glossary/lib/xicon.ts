@@ -3,6 +3,7 @@ import { getArticles } from '@/lib/articles';
 import { getItems } from '@/lib/items';
 import { getRegions } from '@/lib/regions';
 import type { ItemTypeFilter } from '@/components/xicon-header';
+import { haversineDistance, LatLng } from './mapUtils';
 
 export type XiconFilter = {
   kind?: ItemTypeFilter;
@@ -12,6 +13,7 @@ export type XiconFilter = {
   country?: string;
   city?: string;
   state?: string;
+  latLng?: LatLng;
 };
 
 export type XiconEntry = XiconItem;
@@ -46,6 +48,7 @@ export async function getAllXicons(): Promise<XiconItem[]> {
     country: item.country,
     websiteUrl: item.regionPageUrl,
     mapUrl: item.mapUrl,
+    latLng: { lat: item.lat, lng: item.lng } as LatLng,
   }));
 
   return [...items, ...articles, ...regions];
@@ -57,7 +60,9 @@ export async function getXiconById(id: string): Promise<XiconItem | undefined> {
 }
 
 export async function getFilteredXicons(filter: XiconFilter): Promise<XiconItem[]> {
+  /** @todo avoid double fetching for filtered views */
   let items = await getAllXicons();
+  const regionsNearMe = filter.latLng ? await getRegions(filter.latLng) : [];
 
   // Filter by kind
   if (filter.kind) {
@@ -73,6 +78,7 @@ export async function getFilteredXicons(filter: XiconFilter): Promise<XiconItem[
       const tagMatch = item.tags?.some(tag => tag.toLowerCase().includes(searchLower));
 
       // Special handling for regions
+      /** @todo integrate latLng into filter */
       const cityMatch = item.type === 'region' && item.city?.toLowerCase().includes(searchLower);
       const stateMatch = item.type === 'region' && item.state?.toLowerCase().includes(searchLower);
 
@@ -121,6 +127,24 @@ export async function getFilteredXicons(filter: XiconFilter): Promise<XiconItem[
     items = items.filter(item => {
       if (item.type !== 'region') return true;
       return item.state?.toLowerCase() === stateLower;
+    });
+  }
+
+  // Fix: Use synchronous filter for latLng
+  if (filter.latLng) {
+    items = items.filter(item => {
+      if (item.type !== 'region') return true;
+      return regionsNearMe.some(region => region.slug === item.slug);
+    });
+    items.sort((a, b) => {
+      // If a.latLng is missing, sort a after b
+      if (!a.latLng) return 1;
+      // If b.latLng is missing, sort b after a
+      if (!b.latLng) return -1;
+      // Both have latLng, compare distances
+      return (
+        haversineDistance(a.latLng, filter.latLng!) - haversineDistance(b.latLng, filter.latLng!)
+      );
     });
   }
 
@@ -231,9 +255,24 @@ export async function getRelatedXicons(entry: XiconItem, limit = 5): Promise<Xic
       break;
 
     case 'region':
-      // For regions, prioritize same state
-      if (entry.state) {
-        related = sameTypeItems.filter(item => item.state === entry.state);
+      if (entry.latLng) {
+        const latLng = entry.latLng as LatLng;
+        related = (
+          await getFilteredXicons({
+            kind: 'region',
+            latLng: latLng,
+          })
+        ).filter(item => item.id !== entry.id);
+        related.sort((a, b) => {
+          const latLngA = a.latLng as LatLng;
+          const latLngB = b.latLng as LatLng;
+          return haversineDistance(latLngA, latLng) - haversineDistance(latLngB, latLng);
+        });
+      } else {
+        related = await getFilteredXicons({
+          kind: 'region',
+          state: entry.state,
+        });
       }
       break;
   }
@@ -252,14 +291,16 @@ export async function getRelatedXicons(entry: XiconItem, limit = 5): Promise<Xic
 }
 
 export async function getNextPrevXicons(
-  currentId: string,
+  entry: XiconItem,
   filter: XiconFilter
 ): Promise<{ next?: XiconItem; prev?: XiconItem }> {
   // Get filtered items based on the current filter
-  const filteredItems = await getFilteredXicons(filter);
+  const latLng = entry.latLng ? (entry.latLng as LatLng) : undefined;
+  const _filter = latLng ? { ...filter, latLng: latLng } : filter;
+  const filteredItems = await getFilteredXicons(_filter);
 
   // Find the index of the current item
-  const currentIndex = filteredItems.findIndex(item => item.id === currentId);
+  const currentIndex = filteredItems.findIndex(item => item.id === entry.id);
 
   // If item not found in filtered list, return empty
   if (currentIndex === -1) {

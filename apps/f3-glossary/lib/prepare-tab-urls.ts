@@ -30,10 +30,14 @@ export function prepareParamsForTabSwitch({
     const country = searchParams.get('country') || undefined;
     const state = searchParams.get('state') || undefined;
     const city = searchParams.get('city') || undefined;
-    stashRegionFilters(country, state, city);
+    const lat = searchParams.get('lat') ? parseFloat(searchParams.get('lat')!) : undefined;
+    const lng = searchParams.get('lng') ? parseFloat(searchParams.get('lng')!) : undefined;
+    stashRegionFilters(country, state, city, lat, lng);
     params.delete('country');
     params.delete('state');
     params.delete('city');
+    params.delete('lat');
+    params.delete('lng');
   }
 
   // Set new tab
@@ -55,10 +59,12 @@ export function prepareParamsForTabSwitch({
   }
 
   if (newTab === 'region') {
-    const { country, state, city } = getRegionFilters();
+    const { country, state, city, lat, lng } = getRegionFilters();
     if (country) params.set('country', country);
     if (state) params.set('state', state);
     if (city) params.set('city', city);
+    if (lat) params.set('lat', lat.toString());
+    if (lng) params.set('lng', lng.toString());
   }
 
   return params;

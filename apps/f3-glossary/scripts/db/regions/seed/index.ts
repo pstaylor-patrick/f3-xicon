@@ -31,7 +31,7 @@ async function fetchRegions(): Promise<Region[]> {
   for (let i = 0; i < regionNames.length; i++) {
     const name = regionNames[i];
     const { city, state } = getLocation(name, locationsByRegion);
-    const mapUrl = getMapUrl(name, latLngByRegion);
+    const { mapUrl, latLng } = getMapUrl(name, latLngByRegion);
     const slug = kebabCase(name);
     const websiteUrl = `https://freemensworkout.org/regions/${slug}`;
 
@@ -43,6 +43,8 @@ async function fetchRegions(): Promise<Region[]> {
       country: 'United States',
       regionPageUrl: websiteUrl,
       mapUrl,
+      lat: latLng.lat,
+      lng: latLng.lng,
       tags: [],
     };
     regions.push(region);
@@ -145,7 +147,7 @@ const getLatLngByRegion = (rows: string[][], colNums: ColNums) => {
     const lng = row[colNums.lng];
     if (!region || !lat || !lng) return acc;
     if (!acc[region]) acc[region] = [];
-    acc[region].push({ lat, lng });
+    acc[region].push({ lat: parseFloat(lat), lng: parseFloat(lng) });
     return acc;
   }, {});
 };

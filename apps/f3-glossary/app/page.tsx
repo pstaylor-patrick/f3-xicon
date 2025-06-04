@@ -8,6 +8,7 @@ import { Suspense } from 'react';
 import { XiconList } from '@/components/xicon-list';
 import { XiconHeader } from '@/components/xicon-header';
 import type { XiconEntry, XiconFilter } from '@/lib/xicon';
+import type { LatLng } from '@/lib/mapUtils';
 
 const ITEMS_PER_PAGE = 12;
 
@@ -17,11 +18,17 @@ export default function XiconPage() {
     (searchParams.get('kind') as any) || 'all'
   );
 
+  /** @todo make a util function for this */
+  const lat = searchParams.get('lat');
+  const lng = searchParams.get('lng');
+  const latLng =
+    lat && lng ? ({ lat: parseFloat(lat), lng: parseFloat(lng) } as LatLng) : undefined;
   const [filter, setFilter] = useState<XiconFilter>({
     kind: activeTab === 'all' ? undefined : activeTab,
     tags: searchParams.get('tags')?.split(',').filter(Boolean) || [],
     query: searchParams.get('q') || '',
     tagsOperator: (searchParams.get('tagsOperator') as 'AND' | 'OR') || 'OR',
+    latLng: latLng,
   });
 
   const [allResults, setAllResults] = useState<XiconEntry[]>([]);
@@ -36,11 +43,16 @@ export default function XiconPage() {
 
   // Update filter when URL params change
   useEffect(() => {
+    const lat = searchParams.get('lat');
+    const lng = searchParams.get('lng');
+    const latLng =
+      lat && lng ? ({ lat: parseFloat(lat), lng: parseFloat(lng) } as LatLng) : undefined;
     const newFilter: XiconFilter = {
       kind: activeTab === 'all' ? undefined : activeTab,
       tags: searchParams.get('tags')?.split(',').filter(Boolean) || [],
       query: searchParams.get('q') || '',
       tagsOperator: (searchParams.get('tagsOperator') as 'AND' | 'OR') || 'OR',
+      latLng: latLng,
     };
 
     setFilter(newFilter);
