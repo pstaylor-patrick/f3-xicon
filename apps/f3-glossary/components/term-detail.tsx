@@ -83,6 +83,7 @@ export function TermDetail({ entry, related, next, prev }: TermDetailProps) {
 
         <div className="lg:mt-0">
           <RelatedItems
+            entry={entry}
             items={related.filter(item => item.type === 'term')}
             title="Related Terms"
           />

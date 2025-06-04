@@ -3,16 +3,17 @@ import { Play } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { badgeColor } from '@/components/xicon-card';
 import type { XiconEntry } from '@/lib/xicon';
+import { haversineDistance, LatLng } from '@/lib/mapUtils';
 
 interface RelatedItemsProps {
+  entry: XiconEntry;
   items: XiconEntry[];
   title: string;
   className?: string;
 }
 
-export function RelatedItems({ items, title, className = '' }: RelatedItemsProps) {
-  // Cap recommendations to 3
-  const displayedItems = items.slice(0, 3);
+export function RelatedItems({ entry, items, title, className = '' }: RelatedItemsProps) {
+  const displayedItems = items.slice(0, 5);
   return (
     <div className={className}>
       <h2 className="mb-6 text-xl font-semibold tracking-tight">{title}</h2>
@@ -33,6 +34,12 @@ export function RelatedItems({ items, title, className = '' }: RelatedItemsProps
                 </div>
                 <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
                   {item.text.substring(0, 100)}
+                  {entry.latLng && item.latLng && (
+                    <span className="ml-2 text-xs text-muted-foreground">
+                      ({haversineDistance(item.latLng as LatLng, entry.latLng).toFixed(1)} mi from{' '}
+                      {entry.title})
+                    </span>
+                  )}
                 </p>
                 <div className="mt-3">
                   <Badge variant="secondary" className={badgeColor[item.type]}>

@@ -15,6 +15,13 @@
       "when": 1748691016562,
       "tag": "0001_illegal_loners",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1749036133310,
+      "tag": "0002_secret_invisible_woman",
+      "breakpoints": true
     }
   ]
 }

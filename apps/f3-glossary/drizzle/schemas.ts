@@ -1,5 +1,6 @@
 import { pgTable, timestamp, uuid, varchar, text, pgEnum } from 'drizzle-orm/pg-core';
 import { sql } from 'drizzle-orm';
+import { doublePrecision } from 'drizzle-orm/pg-core';
 
 export const itemTypeEnum = pgEnum('item_type', ['exercise', 'term']);
 
@@ -42,6 +43,8 @@ export const regionsSchema = pgTable('regions', {
   country: varchar('country', { length: 255 }).notNull(),
   regionPageUrl: varchar('region_page_url', { length: 255 }).unique().notNull(),
   mapUrl: varchar('map_url', { length: 255 }).unique().notNull(),
+  lat: doublePrecision('lat').notNull(),
+  lng: doublePrecision('lng').notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });

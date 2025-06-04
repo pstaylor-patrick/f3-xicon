@@ -7,6 +7,7 @@ import { getFilteredXicons } from '@/lib/xicon';
 import { useInView } from 'react-intersection-observer';
 import { Loader2 } from 'lucide-react';
 import type { XiconEntry, XiconFilter } from '@/lib/xicon';
+import { haversineDistance, LatLng } from '@/lib/mapUtils';
 
 const ITEMS_PER_PAGE = 12;
 
@@ -17,6 +18,7 @@ export function XiconList() {
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
+  const [filter, setFilter] = useState<XiconFilter>({});
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -24,7 +26,11 @@ export function XiconList() {
 
   // Update results when URL params change
   useEffect(() => {
-    const filter: XiconFilter = {
+    const lat = searchParams.get('lat');
+    const lng = searchParams.get('lng');
+    const latLng =
+      lat && lng ? ({ lat: parseFloat(lat), lng: parseFloat(lng) } as LatLng) : undefined;
+    const filterObj: XiconFilter = {
       kind: (searchParams.get('kind') as any) || undefined,
       tags: searchParams.get('tags')?.split(',').filter(Boolean) || [],
       query: searchParams.get('q') || '',
@@ -32,15 +38,26 @@ export function XiconList() {
       country: searchParams.get('country') || '',
       state: searchParams.get('state') || '',
       city: searchParams.get('city') || '',
+      latLng: latLng,
     };
+    setFilter(filterObj);
 
     setPage(1);
     setLoading(true);
 
     // Get filtered results
     (async () => {
-      const results = await getFilteredXicons(filter);
-      results.sort((a, b) => a.title.localeCompare(b.title));
+      const results = await getFilteredXicons(filterObj);
+      if (filterObj.latLng) {
+        const latLng = filterObj.latLng as LatLng;
+        results.sort((a, b) => {
+          const latLngA = a.latLng as LatLng;
+          const latLngB = b.latLng as LatLng;
+          return haversineDistance(latLngA, latLng) - haversineDistance(latLngB, latLng);
+        });
+      } else {
+        results.sort((a, b) => a.title.localeCompare(b.title));
+      }
       setAllResults(results);
       setDisplayedResults(results.slice(0, ITEMS_PER_PAGE));
       setHasMore(results.length > ITEMS_PER_PAGE);
@@ -91,7 +108,7 @@ export function XiconList() {
     <div className="mt-6">
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {displayedResults.map(entry => (
-          <XiconCard key={entry.id} entry={entry} />
+          <XiconCard key={entry.id} entry={entry} filterLatLng={filter.latLng} />
         ))}
       </div>
 

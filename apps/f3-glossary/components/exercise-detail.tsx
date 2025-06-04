@@ -91,6 +91,7 @@ export function ExerciseDetail({ entry, related, next, prev }: ExerciseDetailPro
 
         <div className="lg:mt-0">
           <RelatedItems
+            entry={entry}
             items={related.filter(item => item.type === 'exercise')}
             title="Related Exercises"
           />

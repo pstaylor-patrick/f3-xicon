@@ -1,3 +1,5 @@
+import { LatLng } from './mapUtils';
+
 export type ExiconEntry = {
   title: string;
   tags: string[];
@@ -39,4 +41,5 @@ export type XiconItem = {
   country?: string;
   websiteUrl?: string;
   mapUrl?: string;
+  latLng?: LatLng;
 };

@@ -111,6 +111,7 @@ export function ArticleDetail({ entry, related, next, prev }: ArticleDetailProps
           <div className="space-y-4">
             {related.length > 0 ? (
               <RelatedItems
+                entry={entry}
                 items={related.filter(item => item.type === 'article')}
                 title="Related Articles"
               />

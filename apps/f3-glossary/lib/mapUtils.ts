@@ -48,19 +48,41 @@ export function calculateHaversineDistance(
   return 2 * MAP_CONSTANTS.EARTH_RADIUS_KM * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-export type LatLng = { lat: string; lng: string };
+/**
+ * Calculates the haversine distance between two points on Earth in miles
+ * @param latLng1 Latitude and longitude of first point
+ * @param latLng2 Latitude and longitude of second point
+ * @returns Distance in miles
+ */
+export function haversineDistance(latLng1: LatLng, latLng2: LatLng): number {
+  const { lat: lat1, lng: lon1 } = latLng1;
+  const { lat: lat2, lng: lon2 } = latLng2;
+  const distanceKm = calculateHaversineDistance(lat1, lon1, lat2, lon2);
+  return distanceKm * 0.621371; // convert km to miles
+}
+
+export type LatLng = { lat: number; lng: number };
 
 /**
  * Generates a URL for the F3 Nation map with the given parameters
  * @param params Object containing latitude, longitude, and zoom level
  * @returns URL string for the F3 Nation map
  */
-export function getMapUrl(regionName: string, latLngByRegion: Record<string, LatLng[]>): string {
+export function getMapUrl(
+  regionName: string,
+  latLngByRegion: Record<string, LatLng[]>
+): {
+  mapUrl: string;
+  latLng: LatLng;
+} {
   const { lat, lng, zoom } = calculateMapParameters(latLngByRegion[regionName]);
   const baseUrl = 'https://map.f3nation.com';
 
   // F3 Nation map uses a simple URL structure
-  return `${baseUrl}/?lat=${lat}&lon=${lng}&zoom=${zoom}`;
+  return {
+    mapUrl: `${baseUrl}/?lat=${lat}&lon=${lng}&zoom=${zoom}`,
+    latLng: { lat, lng } as LatLng,
+  };
 }
 
 /**
@@ -79,8 +101,8 @@ export function calculateMapParameters(workouts: LatLng[]): MapParameters {
   }
 
   const markers = workouts.map(workout => ({
-    lat: parseFloat(workout.lat),
-    lng: parseFloat(workout.lng),
+    lat: workout.lat,
+    lng: workout.lng,
   }));
 
   // Calculate bounds
