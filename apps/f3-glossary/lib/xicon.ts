@@ -9,6 +9,7 @@ export type XiconFilter = {
   tags?: string[];
   query?: string;
   tagsOperator?: 'AND' | 'OR';
+  country?: string;
   city?: string;
   state?: string;
 };
@@ -96,12 +97,21 @@ export async function getFilteredXicons(filter: XiconFilter): Promise<XiconItem[
     });
   }
 
+  // Filter by country (for regions)
+  if (filter.country) {
+    const countryLower = filter.country.toLowerCase();
+    items = items.filter(item => {
+      if (item.type !== 'region') return true;
+      return item.country?.toLowerCase() === countryLower;
+    });
+  }
+
   // Filter by city (for regions)
   if (filter.city) {
     const cityLower = filter.city.toLowerCase();
     items = items.filter(item => {
       if (item.type !== 'region') return true;
-      return item.city?.toLowerCase().includes(cityLower);
+      return item.city?.toLowerCase() === cityLower;
     });
   }
 
@@ -110,7 +120,7 @@ export async function getFilteredXicons(filter: XiconFilter): Promise<XiconItem[
     const stateLower = filter.state.toLowerCase();
     items = items.filter(item => {
       if (item.type !== 'region') return true;
-      return item.state?.toLowerCase().includes(stateLower);
+      return item.state?.toLowerCase() === stateLower;
     });
   }
 
